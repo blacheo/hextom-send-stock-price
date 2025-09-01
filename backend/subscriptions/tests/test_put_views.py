@@ -3,7 +3,7 @@ from rest_framework import status
 from rest_framework.test import APITestCase
 from subscriptions.models import Subscription
 
-class SubscriptionAPITests(APITestCase):
+class SubscriptionPutAPITests(APITestCase):
     def setUp(self):
         Subscription.objects.create(email="abc@gmail.com", stock_sticker="DOW")
         self.add_url = reverse('subscription-create')
@@ -20,3 +20,5 @@ class SubscriptionAPITests(APITestCase):
 
     def test_new_subscription_invalid(self):
         pass
+
+    

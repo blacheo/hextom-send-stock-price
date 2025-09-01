@@ -2,10 +2,12 @@ from django.shortcuts import render
 from rest_framework import permissions, viewsets, response, status
 from rest_framework.views import APIView
 
+from subscriptions.models import Subscription
 from subscriptions.serializers import SubscriptionSerializer
 
 # Create your views here.
 class SubscriptionList(APIView):
+    
     permission_classes = [permissions.IsAuthenticated]
     def get(self, request):
         pass
