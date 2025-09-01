@@ -7,93 +7,10 @@ import {
   CardContent,
   Typography,
   Box,
+  Stack,
 } from "@mui/material";
-import SubscriptionForm from "./components/Subscribe";
+import { LoginSignupOverlay } from "./components/LoginOverlay";
 
-function LoginOverlay({ onLogin }) {
-  const {
-    register,
-    handleSubmit,
-    formState: { errors, isSubmitting },
-  } = useForm();
-
-  const onSubmit = async (data) => {
-    // Simulate login API call
-    await new Promise((res) => setTimeout(res, 1000));
-    onLogin(data.email); // Notify parent of successful login
-  };
-
-  return (
-    <Box
-      sx={{
-        position: "fixed",
-        inset: 0,
-        bgcolor: "rgba(0,0,0,0.5)",
-        display: "flex",
-        justifyContent: "center",
-        alignItems: "center",
-        zIndex: 9999,
-      }}
-    >
-      <Card sx={{ maxWidth: 400, width: "100%", boxShadow: 6, borderRadius: 2 }}>
-        <CardContent sx={{ p: 4 }}>
-          <Typography variant="h5" component="h2" align="center" gutterBottom>
-            Login
-          </Typography>
-
-          <form onSubmit={handleSubmit(onSubmit)}>
-            {/* Email */}
-            <TextField
-              fullWidth
-              label="Email Address"
-              margin="normal"
-              variant="outlined"
-              {...register("email", {
-                required: "Email is required",
-                pattern: {
-                  value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
-                  message: "Invalid email format",
-                },
-              })}
-              error={!!errors.email}
-              helperText={errors.email ? errors.email.message : ""}
-            />
-
-            {/* Password */}
-            <TextField
-              fullWidth
-              type="password"
-              label="Password"
-              margin="normal"
-              variant="outlined"
-              {...register("password", {
-                required: "Password is required",
-                minLength: {
-                  value: 6,
-                  message: "Password must be at least 6 characters",
-                },
-              })}
-              error={!!errors.password}
-              helperText={errors.password ? errors.password.message : ""}
-            />
-
-            {/* Submit Button */}
-            <Button
-              type="submit"
-              fullWidth
-              variant="contained"
-              color="primary"
-              sx={{ mt: 3 }}
-              disabled={isSubmitting}
-            >
-              {isSubmitting ? "Logging in..." : "Login"}
-            </Button>
-          </form>
-        </CardContent>
-      </Card>
-    </Box>
-  );
-}
 
 export default function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -104,12 +21,31 @@ export default function App() {
     setIsLoggedIn(true);
   };
 
+  const handleSignup = () => {
+    alert("Redirecting to signup page...");
+    // Here you could:
+    // - Show a SignupOverlay
+    // - Navigate to /signup route (if using React Router or Next.js)
+  };
+
   return (
     <Box>
       {/* Show overlay if not logged in */}
-      {!isLoggedIn && <LoginOverlay onLogin={handleLogin} />}
+      {!isLoggedIn && (
+        <LoginSignupOverlay onLogin={handleLogin} onSignup={handleSignup} />
+      )}
 
-      <SubscriptionForm/>
+      {/* Main content */}
+      <Box sx={{ p: 4 }}>
+        <Typography variant="h4">Welcome to the App</Typography>
+        {isLoggedIn ? (
+          <Typography sx={{ mt: 2 }}>Logged in as {userEmail}</Typography>
+        ) : (
+          <Typography sx={{ mt: 2, color: "text.secondary" }}>
+            Please log in to continue.
+          </Typography>
+        )}
+      </Box>
     </Box>
   );
 }
