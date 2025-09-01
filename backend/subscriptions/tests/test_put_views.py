@@ -10,15 +10,18 @@ class SubscriptionPutAPITests(APITestCase):
         
 
     def test_new_subscription_success(self):
-        response = self.client.post(self.add_url, {'email': "abc@gmail.com", 'stock_sticker' : "NASDAQ"})
+        response = self.client.post(self.add_url, {'email': "abc@gmail.com", 'stock_sticker' : "^IXIC"})
         self.assertEqual(response.status_code, status.HTTP_201_CREATED, response)
-        subscription = Subscription.objects.get(stock_sticker="NASDAQ")
+        subscription = Subscription.objects.get(stock_sticker="^IXIC")
 
         self.assertEqual(subscription.email, "abc@gmail.com")
         self.assertEqual(Subscription.objects.count(), 2)
 
 
-    def test_new_subscription_invalid(self):
-        pass
+    def test_new_subscription_invalid_stock_sticker(self):
+        response = self.client.post(self.add_url, {'email': "abc@gmail.com", 'stock_sticker' : "whatever"})
+
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        
 
     

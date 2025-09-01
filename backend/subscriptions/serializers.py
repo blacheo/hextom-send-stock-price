@@ -3,6 +3,7 @@ from rest_framework import serializers
 from subscriptions.models import Subscription
 from subscriptions.constants import MAX_EMAIL_LENGTH
 from subscriptions.constants import MAX_STOCK_STICKER_LENGTH
+from yfinance import Ticker
 
 class SubscriptionSerializer(serializers.Serializer):
     email = serializers.CharField(max_length=MAX_EMAIL_LENGTH)
@@ -14,3 +15,9 @@ class SubscriptionSerializer(serializers.Serializer):
     def update(self, instance, validated_data):
         instance.email = validated_data.get('email', instance.email)
         instance.stock_sticker = validated_data.get('stock_sticker', instance.stock_sticker)
+
+    def validate(self, attrs):
+        info = Ticker(attrs["stock_sticker"]).history(period='7d', interval='1d')
+        if (len(info) <= 0):
+            raise serializers.ValidationError("Stock is either delisted or doesn't exist")
+        return attrs
