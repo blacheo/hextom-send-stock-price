@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import { useForm } from "react-hook-form";
 import {
   TextField,
@@ -8,9 +8,8 @@ import {
   Typography,
   Box,
 } from "@mui/material";
-import SubscriptionForm from "./components/Subscribe";
 
-function LoginOverlay({ onLogin }) {
+export default function LoginPage() {
   const {
     register,
     handleSubmit,
@@ -20,22 +19,20 @@ function LoginOverlay({ onLogin }) {
   const onSubmit = async (data) => {
     // Simulate login API call
     await new Promise((res) => setTimeout(res, 1000));
-    onLogin(data.email); // Notify parent of successful login
+    alert(`Logged in as: ${data.email}`);
   };
 
   return (
     <Box
       sx={{
-        position: "fixed",
-        inset: 0,
-        bgcolor: "rgba(0,0,0,0.5)",
         display: "flex",
         justifyContent: "center",
         alignItems: "center",
-        zIndex: 9999,
+        minHeight: "100vh",
+        bgcolor: "grey.100",
       }}
     >
-      <Card sx={{ maxWidth: 400, width: "100%", boxShadow: 6, borderRadius: 2 }}>
+      <Card sx={{ maxWidth: 400, width: "100%", boxShadow: 3, borderRadius: 2 }}>
         <CardContent sx={{ p: 4 }}>
           <Typography variant="h5" component="h2" align="center" gutterBottom>
             Login
@@ -91,25 +88,6 @@ function LoginOverlay({ onLogin }) {
           </form>
         </CardContent>
       </Card>
-    </Box>
-  );
-}
-
-export default function App() {
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [userEmail, setUserEmail] = useState("");
-
-  const handleLogin = (email) => {
-    setUserEmail(email);
-    setIsLoggedIn(true);
-  };
-
-  return (
-    <Box>
-      {/* Show overlay if not logged in */}
-      {!isLoggedIn && <LoginOverlay onLogin={handleLogin} />}
-
-      <SubscriptionForm/>
     </Box>
   );
 }
