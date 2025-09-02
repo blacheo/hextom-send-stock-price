@@ -1,16 +1,18 @@
 from django.shortcuts import render
 from rest_framework import permissions, viewsets, response, status
 from rest_framework.views import APIView
-
+from knox.auth import TokenAuthentication
 from subscriptions.models import Subscription
 from subscriptions.serializers import SubscriptionSerializer
 
 # Create your views here.
-class SubscriptionList(APIView):
+class SubscriptionListAll(APIView):
     
-    permission_classes = [permissions.IsAuthenticated]
-    def get(self, request):
-        pass
+    permission_classes = [permissions.IsAdminUser]
+    authentication_classes = [TokenAuthentication]
+    def get(self, _):
+        subscriptions = Subscription.objects.all().values()
+        return response.Response(subscriptions)
 
 class SubscriptionCreate(APIView):
     permission_classes = [permissions.AllowAny]
