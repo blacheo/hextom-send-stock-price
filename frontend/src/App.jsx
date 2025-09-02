@@ -1,24 +1,29 @@
-import React, { useState } from "react";
+import React, { useState, createContext } from "react";
 import { useForm } from "react-hook-form";
-import {
-  TextField,
-  Button,
-  Card,
-  CardContent,
-  Typography,
-  Box,
-  Stack,
-} from "@mui/material";
 import { LoginSignupOverlay } from "./components/LoginOverlay";
+import { StockSubscriptionForm } from "./components/Subscribe";
+import { YourStocks } from "./components/YourStocks";
 
+export const SetShowLogSignUpPopupContext = createContext();
+const API_BASE = "http://127.0.0.1:8000/api";
 
 export default function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [showLogInOrSignUpPopup, setShowLogSignUpPopup] = useState(false);
   const [userEmail, setUserEmail] = useState("");
+
 
   const handleLogin = (email) => {
     setUserEmail(email);
     setIsLoggedIn(true);
+  };
+
+  const onSubscribe = async (email, stock_sticker) => {
+    try {
+      const response = await axios.post(`${API_BASE}`, {email: email, stock_sticker: stock_sticker})
+    } catch (err) {
+
+    }
   };
 
   const handleSignup = () => {
@@ -29,23 +34,23 @@ export default function App() {
   };
 
   return (
-    <Box>
-      {/* Show overlay if not logged in */}
-      {!isLoggedIn && (
-        <LoginSignupOverlay onLogin={handleLogin} onSignup={handleSignup} />
+    <>  
+      
+      {!isLoggedIn && showLogInOrSignUpPopup && (
+        <SetShowLogSignUpPopupContext value={setShowLogSignUpPopup}>
+          <LoginSignupOverlay onLogin={handleLogin} onSignup={handleSignup} setShowLogSignUpPopup={setShowLogSignUpPopup}/>
+        </SetShowLogSignUpPopupContext>
       )}
+        <div className="flex-col justify-center items-center p-4 space-y-4 min-h-screen">
+          <StockSubscriptionForm onSubscribe={onSubscribe}/>
+          
+            <YourStocks isLoggedIn={isLoggedIn} setShowLogSignUpPopup={setShowLogSignUpPopup}/>
+          
 
-      {/* Main content */}
-      <Box sx={{ p: 4 }}>
-        <Typography variant="h4">Welcome to the App</Typography>
-        {isLoggedIn ? (
-          <Typography sx={{ mt: 2 }}>Logged in as {userEmail}</Typography>
-        ) : (
-          <Typography sx={{ mt: 2, color: "text.secondary" }}>
-            Please log in to continue.
-          </Typography>
-        )}
-      </Box>
-    </Box>
+          
+        </div>
+
+        
+    </>
   );
 }

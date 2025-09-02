@@ -8,7 +8,8 @@ import {
     Box,
     Stack,
 } from "@mui/material";
-import { useState } from "react";
+import { useContext, useState } from "react";
+import { SetShowLogSignUpPopupContext } from "../App";
 
 export function LoginSignupOverlay({ onLogin, onSignup }) {
     const [ isOnSignup, setIsOnSignup ] = useState(false);
@@ -22,7 +23,26 @@ export function LoginSignupOverlay({ onLogin, onSignup }) {
     )
 }
 
-function SignUpOverlay({ onSignUp, setIsOnSignup }) {
+function BackgroundBox({children}) {
+    const setShowLogSignUpPopup = useContext(SetShowLogSignUpPopupContext);
+    return (<Box
+        sx={{
+            position: "fixed",
+            inset: 0,
+            bgcolor: "rgba(0,0,0,0.5)",
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            zIndex: 9999,
+        }}
+        onClick={() => setShowLogSignUpPopup(false)}
+       
+    >{children}</Box>)
+
+}
+
+function SignUpOverlay({ onSignUp }) {
+
     const {
         register,
         handleSubmit,
@@ -35,18 +55,8 @@ function SignUpOverlay({ onSignUp, setIsOnSignup }) {
         onSignUp(data.email); // Notify parent of successful login
     };
 
-    return (<Box
-        sx={{
-            position: "fixed",
-            inset: 0,
-            bgcolor: "rgba(0,0,0,0.5)",
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-            zIndex: 9999,
-        }}
-    >
-        <Card sx={{ maxWidth: 400, width: "100%", boxShadow: 6, borderRadius: 2 }}>
+    return (<BackgroundBox>
+            <Card sx={{ maxWidth: 400, width: "100%", boxShadow: 6, borderRadius: 2 }}>
             <CardContent sx={{ p: 4 }}>
                 <Typography variant="h5" component="h2" align="center" gutterBottom>
                     Signup
@@ -114,7 +124,8 @@ function SignUpOverlay({ onSignUp, setIsOnSignup }) {
                 </form>
             </CardContent>
         </Card>
-    </Box>
+    </BackgroundBox>
+    
     );
 }
 
@@ -132,17 +143,7 @@ function LoginOverlay({ onLogin, setIsOnSignup }) {
     };
 
     return (
-        <Box
-            sx={{
-                position: "fixed",
-                inset: 0,
-                bgcolor: "rgba(0,0,0,0.5)",
-                display: "flex",
-                justifyContent: "center",
-                alignItems: "center",
-                zIndex: 9999,
-            }}
-        >
+        <BackgroundBox>
             <Card sx={{ maxWidth: 400, width: "100%", boxShadow: 6, borderRadius: 2 }}>
                 <CardContent sx={{ p: 4 }}>
                     <Typography variant="h5" component="h2" align="center" gutterBottom>
@@ -211,6 +212,6 @@ function LoginOverlay({ onLogin, setIsOnSignup }) {
                     </form>
                 </CardContent>
             </Card>
-        </Box>
+        </BackgroundBox>
     );
 }
