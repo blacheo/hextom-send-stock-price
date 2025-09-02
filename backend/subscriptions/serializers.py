@@ -5,9 +5,12 @@ from subscriptions.constants import MAX_EMAIL_LENGTH
 from subscriptions.constants import MAX_STOCK_STICKER_LENGTH
 from yfinance import Ticker
 
-class SubscriptionSerializer(serializers.Serializer):
-    email = serializers.CharField(max_length=MAX_EMAIL_LENGTH)
-    stock_sticker = serializers.CharField(max_length=MAX_STOCK_STICKER_LENGTH)
+class SubscriptionSerializer(serializers.ModelSerializer):
+    stock_price = serializers.SerializerMethodField()
+    class Meta:
+        model = Subscription
+        fields = ["email", "stock_sticker", "stock_price"]
+        read_only_fields = ["stock_price"]
 
     def create(self, data):
         return Subscription.objects.create(**data)
@@ -21,3 +24,12 @@ class SubscriptionSerializer(serializers.Serializer):
         if (len(info) <= 0):
             raise serializers.ValidationError("Stock is either delisted or doesn't exist")
         return attrs
+
+    def get_stock_price(self, data: Subscription):
+        
+        ticker = Ticker(data.stock_sticker)
+        info = ticker.history(period="1d")
+        if not info.empty:
+            return float(info["Close"].iloc[-1])
+        return None
+    

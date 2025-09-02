@@ -17,11 +17,13 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import include, path
 
-from subscriptions.views import SubscriptionCreate, SubscriptionListAll
+from subscriptions.constants import GET_ALL_NAME, GET_OWN_NAME, PUT_SUBSCRIPTION
+from subscriptions.views import SubscriptionCreate, SubscriptionListAll, SubscriptionSeeOwn
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('subscriptions/add/', SubscriptionCreate.as_view(), name="subscription-create"),
-    path('subscriptions/getall/', SubscriptionListAll.as_view(), name="subscription-get-all"),
+    path('subscriptions/add/', SubscriptionCreate.as_view(), name=PUT_SUBSCRIPTION),
+    path('subscriptions/getall/', SubscriptionListAll.as_view(), name=GET_ALL_NAME),
+    path('subscription/getown/', SubscriptionSeeOwn.as_view(), name=GET_OWN_NAME),
     path(r'api/auth/', include('knox.urls'))
 ]

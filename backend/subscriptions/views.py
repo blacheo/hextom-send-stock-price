@@ -6,13 +6,22 @@ from subscriptions.models import Subscription
 from subscriptions.serializers import SubscriptionSerializer
 
 # Create your views here.
+class SubscriptionSeeOwn(APIView):
+    permission_classes = [permissions.IsAuthenticated]
+    authentication_classes = [TokenAuthentication]
+
+    def get(self, request):
+        subscriptions = Subscription.objects.filter(email=request.user.email)
+        serializer = SubscriptionSerializer(subscriptions, many=True)
+        return response.Response(serializer.data)
+
 class SubscriptionListAll(APIView):
-    
     permission_classes = [permissions.IsAdminUser]
     authentication_classes = [TokenAuthentication]
     def get(self, _):
-        subscriptions = Subscription.objects.all().values()
-        return response.Response(subscriptions)
+        subscriptions = Subscription.objects.all()
+        serializer = SubscriptionSerializer(subscriptions, many=True)
+        return response.Response(serializer.data)
 
 class SubscriptionCreate(APIView):
     permission_classes = [permissions.AllowAny]
