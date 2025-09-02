@@ -1,35 +1,51 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import React, { useState } from "react";
+import { useForm } from "react-hook-form";
+import {
+  TextField,
+  Button,
+  Card,
+  CardContent,
+  Typography,
+  Box,
+  Stack,
+} from "@mui/material";
+import { LoginSignupOverlay } from "./components/LoginOverlay";
 
-function App() {
-  const [count, setCount] = useState(0)
+
+export default function App() {
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [userEmail, setUserEmail] = useState("");
+
+  const handleLogin = (email) => {
+    setUserEmail(email);
+    setIsLoggedIn(true);
+  };
+
+  const handleSignup = () => {
+    alert("Redirecting to signup page...");
+    // Here you could:
+    // - Show a SignupOverlay
+    // - Navigate to /signup route (if using React Router or Next.js)
+  };
 
   return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
-}
+    <Box>
+      {/* Show overlay if not logged in */}
+      {!isLoggedIn && (
+        <LoginSignupOverlay onLogin={handleLogin} onSignup={handleSignup} />
+      )}
 
-export default App
+      {/* Main content */}
+      <Box sx={{ p: 4 }}>
+        <Typography variant="h4">Welcome to the App</Typography>
+        {isLoggedIn ? (
+          <Typography sx={{ mt: 2 }}>Logged in as {userEmail}</Typography>
+        ) : (
+          <Typography sx={{ mt: 2, color: "text.secondary" }}>
+            Please log in to continue.
+          </Typography>
+        )}
+      </Box>
+    </Box>
+  );
+}
