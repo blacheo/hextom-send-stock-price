@@ -16,11 +16,11 @@ class SubscriptionSeeOwn(APIView):
         serializer = SubscriptionSerializer(subscriptions, many=True)
         return Response(serializer.data)
     
-    def delete(self, request, pk):
+    def delete(self, request):
         try:
-            subscription = Subscription.objects.get(email=request.user.email, stock_sticker=pk.pk)
+            subscription = Subscription.objects.get(email=request.user.email, stock_sticker=request.data.get("stock_sticker"))
         except Subscription.DoesNotExist:
-            return Response({"error": "Subscription not found"})
+            return Response({"error": "Subscription not found"}, status=status.HTTP_404_NOT_FOUND)
         subscription.delete()
         return Response({"message": "Subscription deleted successfully"}, status=status.HTTP_204_NO_CONTENT)
 
