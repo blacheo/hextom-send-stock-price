@@ -1,5 +1,6 @@
 from rest_framework import serializers
 
+from subscriptions.utilities.get_stock_price import get_stock_price
 from subscriptions.models import Subscription
 from subscriptions.constants import MAX_EMAIL_LENGTH
 from subscriptions.constants import MAX_STOCK_STICKER_LENGTH
@@ -26,10 +27,5 @@ class SubscriptionSerializer(serializers.ModelSerializer):
         return attrs
 
     def get_stock_price(self, data: Subscription):
-        
-        ticker = Ticker(data.stock_sticker)
-        info = ticker.history(period="1d")
-        if not info.empty:
-            return float(info["Close"].iloc[-1])
-        return None
+        return get_stock_price(data)
     
