@@ -1,9 +1,10 @@
 from django.shortcuts import render
-from rest_framework import permissions, viewsets, response, status
+from rest_framework import permissions, viewsets, status
 from rest_framework.views import APIView
 from knox.auth import TokenAuthentication
 from subscriptions.models import Subscription
 from subscriptions.serializers import SubscriptionSerializer
+from rest_framework.response import Response
 
 # Create your views here.
 class SubscriptionSeeOwn(APIView):
@@ -13,7 +14,16 @@ class SubscriptionSeeOwn(APIView):
     def get(self, request):
         subscriptions = Subscription.objects.filter(email=request.user.email)
         serializer = SubscriptionSerializer(subscriptions, many=True)
-        return response.Response(serializer.data)
+        return Response(serializer.data)
+    
+    def delete(self, request, pk):
+        try:
+            subscription = Subscription.objects.get(email=request.user.email, stock_sticker=pk.pk)
+        except Subscription.DoesNotExist:
+            return Response({"error": "Subscription not found"})
+        subscription.delete()
+        return Response({"message": "Subscription deleted successfully"}, status=status.HTTP_204_NO_CONTENT)
+
 
 class SubscriptionListAll(APIView):
     permission_classes = [permissions.IsAdminUser]
@@ -21,7 +31,7 @@ class SubscriptionListAll(APIView):
     def get(self, _):
         subscriptions = Subscription.objects.all()
         serializer = SubscriptionSerializer(subscriptions, many=True)
-        return response.Response(serializer.data)
+        return Response(serializer.data)
 
 class SubscriptionCreate(APIView):
     permission_classes = [permissions.AllowAny]
@@ -30,7 +40,11 @@ class SubscriptionCreate(APIView):
 
         serializer = SubscriptionSerializer(data=request.data)
 
-        if serializer.is_valid():
-            serializer.save()
-            return response.Response(serializer.data, status=status.HTTP_201_CREATED)
-        return response.Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        if not serializer.is_valid():
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        
+        if Subscription.objects.filter(email=request.data.get("email"), stock_sticker=request.data.get("stock_sticker")).exists():
+            return Response({"error": "Subscription already exists"}, status=status.HTTP_400_BAD_REQUEST)
+        
+        serializer.save()
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
