@@ -2,6 +2,7 @@ import { useState, createContext, useEffect } from "react";
 import { LoginOverlay, SignupOverlay } from "./components/LoginOverlay";
 import { API } from "./utilities/constants";
 import StockSubscribe from "./components/StockSubscribe";
+import { Subscriptions } from "./components/Subscriptions";
 
 export const SetShowLogSignUpPopupContext = createContext();
 export default function App() {
@@ -59,6 +60,8 @@ export default function App() {
       )}
 
       <StockSubscribe/>
+
+      <Subscriptions/>
     </div>
   );
 }
