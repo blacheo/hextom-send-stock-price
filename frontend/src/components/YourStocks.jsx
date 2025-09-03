@@ -1,6 +1,12 @@
+import { useEffect, useState } from "react";
 import Card from "./Card";
 
 export function YourStocks({isLoggedIn, setShowLogSignUpPopup}) {
+    const [subscriptions, setSubscriptions] = useState([]);
+    const [isLoading, setIsLoading] = useState(false);
+    useEffect(() => {
+
+    }, [])
 
     if (!isLoggedIn) {
         return (
@@ -8,6 +14,12 @@ export function YourStocks({isLoggedIn, setShowLogSignUpPopup}) {
             <button onClick={() => setShowLogSignUpPopup(true)}>Login to see your Subscriptions</button>
         </>
     )
+    }
+
+    if (isLoading) {
+        return (
+            <>Subscriptions are Loading...</>
+        )
     }
 
     return (

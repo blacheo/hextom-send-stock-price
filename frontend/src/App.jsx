@@ -3,10 +3,9 @@ import { useForm } from "react-hook-form";
 import { LoginSignupOverlay } from "./components/LoginOverlay";
 import { StockSubscriptionForm } from "./components/Subscribe";
 import { YourStocks } from "./components/YourStocks";
+import { API_BASE } from "./utilities/constants";
 
 export const SetShowLogSignUpPopupContext = createContext();
-const API_BASE = "http://127.0.0.1:8000/api";
-
 export default function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [showLogInOrSignUpPopup, setShowLogSignUpPopup] = useState(false);
