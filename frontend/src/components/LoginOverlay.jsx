@@ -11,7 +11,7 @@ const API = axios.create({
 })
 
 // Login Overlay
-export function LoginOverlay({ onLogin, onSwitchToSignup }) {
+export function LoginOverlay({ onLogin, onSwitchToSignup, dismiss }) {
   const {
     register,
     handleSubmit,
@@ -48,6 +48,12 @@ export function LoginOverlay({ onLogin, onSwitchToSignup }) {
   return (
     <div className="fixed inset-0 bg-black/30 backdrop-blur-sm bg-opacity-50 flex items-center justify-center z-50">
       <div className="bg-white rounded-2xl shadow-lg w-full max-w-md p-6">
+        <button
+          onClick={dismiss}
+          className="absolute top-2 right-2 text-gray-500 hover:text-gray-700"
+        >
+          ✕
+        </button>
         <h2 className="text-2xl font-semibold text-center mb-6">Login</h2>
 
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
@@ -116,7 +122,7 @@ export function LoginOverlay({ onLogin, onSwitchToSignup }) {
 }
 
 // Signup Overlay
-function SignupOverlay({ onSignup, onSwitchToLogin }) {
+export function SignupOverlay({ onSignup, onSwitchToLogin }) {
   const {
     register,
     handleSubmit,
@@ -130,7 +136,7 @@ function SignupOverlay({ onSignup, onSwitchToLogin }) {
   };
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+    <div className="fixed inset-0 bg-black/30 backdrop-blur-sm bg-opacity-50 flex items-center justify-center z-50">
       <div className="bg-white rounded-2xl shadow-lg w-full max-w-md p-6">
         <h2 className="text-2xl font-semibold text-center mb-6">Sign Up</h2>
 
