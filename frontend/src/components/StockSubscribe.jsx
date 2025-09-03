@@ -3,7 +3,7 @@ import { useForm } from "react-hook-form";
 import axios from "axios";
 import { API } from "../utilities/constants";
 
-export default function StockSubscribe() {
+export default function StockSubscribe({email}) {
   const { register, handleSubmit, formState: { errors }, reset } = useForm();
   const [message, setMessage] = useState("");
   const [error, setError] = useState("");
@@ -48,6 +48,8 @@ export default function StockSubscribe() {
         <input
           type="email"
           placeholder="Email Address"
+          disabled={email !== null}
+          defaultValue={email || ""}
           {...register("email", {
             required: "Email is required",
             pattern: {
@@ -55,7 +57,8 @@ export default function StockSubscribe() {
               message: "Invalid email address",
             },
           })}
-          className="border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+          className={`border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 
+            ${email ? "bg-gray-100 text-gray-600 cursor-not-allowed" : ""}`}
         />
         {errors.email && <div className="text-red-500 text-sm">{errors.email.message}</div>}
 

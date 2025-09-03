@@ -7,7 +7,7 @@ import { Subscriptions } from "./components/Subscriptions";
 export const SetShowLogSignUpPopupContext = createContext();
 export default function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [userEmail, setUserEmail] = useState("");
+  const [userEmail, setUserEmail] = useState(null);
   const [authMode, setAuthMode] = useState("none"); // "login" or "signup" or "none"
 
   const handleLogin = (email) => {
@@ -19,6 +19,14 @@ export default function App() {
     setUserEmail(email);
     setIsLoggedIn(true);
   };
+
+  const handleLogout = () => {
+    setIsLoggedIn(false)
+    setAuthMode("none")
+    setUserEmail("")
+    localStorage.removeItem("authToken")
+    localStorage.removeItem("email")
+  }
 
   useEffect(() => {
     const data = localStorage.getItem("authToken");
@@ -48,7 +56,8 @@ export default function App() {
       {/* Main content */}
       <h1 className="text-3xl font-bold">Stock Tracker</h1>
       {isLoggedIn ? (
-        <p className="mt-2 text-gray-700">Logged in as {userEmail}</p>
+        <p className="mt-2 text-gray-700">Logged in as {userEmail} {" "}
+        <span className="text-blue-500 underline cursor-pointer" onClick={handleLogout}>logout?</span></p> 
       ) : (
         <p className="mt-2 text-gray-500">Please{" "}
         <span className="text-blue-500 underline cursor-pointer" onClick={() => setAuthMode("login")}>
@@ -59,9 +68,10 @@ export default function App() {
            <span className="text-blue-500 underline cursor-pointer" onClick={() => setAuthMode("signup")}>sign up</span> to view your subscriptions.</p>
       )}
 
-      <StockSubscribe/>
+      <StockSubscribe email={userEmail}/>
 
-      <Subscriptions/>
+      {isLoggedIn && (<Subscriptions/>) }
+      
     </div>
   );
 }
