@@ -1,217 +1,235 @@
+import React, { useState } from "react";
 import { useForm } from "react-hook-form";
-import {
-    TextField,
-    Button,
-    Card,
-    CardContent,
-    Typography,
-    Box,
-    Stack,
-} from "@mui/material";
-import { useContext, useState } from "react";
-import { SetShowLogSignUpPopupContext } from "../App";
+import axios from "axios";
 
-export function LoginSignupOverlay({ onLogin, onSignup }) {
-    const [ isOnSignup, setIsOnSignup ] = useState(false);
+const API = axios.create({
+    baseURL: import.meta.env.VITE_APP_API_URL,
+    withCredentials: true, // important for cookies / session auth
+    headers: {
+      "Content-Type": "application/json",
+    },
+})
 
-    return (
-        <>
-            {isOnSignup ? 
-            <SignUpOverlay onSignUp={onSignup} setIsOnSignup={setIsOnSignup} />
-             : <LoginOverlay onLogin={onLogin} setIsOnSignup={setIsOnSignup} />}
-        </>
-    )
+// Login Overlay
+export function LoginOverlay({ onLogin, onSwitchToSignup }) {
+  const {
+    register,
+    handleSubmit,
+    formState: { errors, isSubmitting },
+  } = useForm();
+
+  const onSubmit = async (data) => {
+  try {
+    const response = await API.post("/api/auth/login/", {
+        email: data.email,
+        password: data.password,
+    });
+
+    if (!response.ok) {
+      throw new Error("Login failed");
+    }
+
+    const result = await response.json();
+
+    // If using Django REST Knox or JWT:
+    // Save token in localStorage
+    if (result.token) {
+      localStorage.setItem("authToken", result.token);
+    }
+
+    // Notify parent of login success
+    onLogin(data.email);
+  } catch (error) {
+    console.error(error);
+    alert("Invalid credentials. Please try again.");
+  }
+};
+
+  return (
+    <div className="fixed inset-0 bg-black/30 backdrop-blur-sm bg-opacity-50 flex items-center justify-center z-50">
+      <div className="bg-white rounded-2xl shadow-lg w-full max-w-md p-6">
+        <h2 className="text-2xl font-semibold text-center mb-6">Login</h2>
+
+        <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+          {/* Email */}
+          <div>
+            <label className="block text-sm font-medium mb-1">Email</label>
+            <input
+              type="email"
+              placeholder="you@example.com"
+              className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+              {...register("email", {
+                required: "Email is required",
+                pattern: {
+                  value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
+                  message: "Invalid email format",
+                },
+              })}
+            />
+            {errors.email && (
+              <p className="text-red-500 text-sm mt-1">{errors.email.message}</p>
+            )}
+          </div>
+
+          {/* Password */}
+          <div>
+            <label className="block text-sm font-medium mb-1">Password</label>
+            <input
+              type="password"
+              placeholder="••••••••"
+              className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+              {...register("password", {
+                required: "Password is required",
+                minLength: {
+                  value: 6,
+                  message: "Password must be at least 6 characters",
+                },
+              })}
+            />
+            {errors.password && (
+              <p className="text-red-500 text-sm mt-1">{errors.password.message}</p>
+            )}
+          </div>
+
+          {/* Buttons */}
+          <div className="space-y-2">
+            <button
+              type="submit"
+              disabled={isSubmitting}
+              className="w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700 disabled:opacity-50"
+            >
+              {isSubmitting ? "Logging in..." : "Login"}
+            </button>
+
+            <button
+              type="button"
+              onClick={onSwitchToSignup}
+              className="w-full border border-blue-600 text-blue-600 py-2 rounded-lg hover:bg-blue-50"
+            >
+              Sign Up
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  );
 }
 
-function BackgroundBox({children}) {
-    const setShowLogSignUpPopup = useContext(SetShowLogSignUpPopupContext);
-    return (<Box
-        sx={{
-            position: "fixed",
-            inset: 0,
-            bgcolor: "rgba(0,0,0,0.5)",
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-            zIndex: 9999,
-        }}
-        onClick={() => setShowLogSignUpPopup(false)}
-       
-    >{children}</Box>)
+// Signup Overlay
+function SignupOverlay({ onSignup, onSwitchToLogin }) {
+  const {
+    register,
+    handleSubmit,
+    watch,
+    formState: { errors, isSubmitting },
+  } = useForm();
 
+  const onSubmit = async (data) => {
+    await new Promise((res) => setTimeout(res, 1000)); // simulate API
+    onSignup(data.email);
+  };
+
+  return (
+    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+      <div className="bg-white rounded-2xl shadow-lg w-full max-w-md p-6">
+        <h2 className="text-2xl font-semibold text-center mb-6">Sign Up</h2>
+
+        <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+          {/* Name */}
+          <div>
+            <label className="block text-sm font-medium mb-1">Name</label>
+            <input
+              type="text"
+              placeholder="John Doe"
+              className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+              {...register("name", { required: "Name is required" })}
+            />
+            {errors.name && (
+              <p className="text-red-500 text-sm mt-1">{errors.name.message}</p>
+            )}
+          </div>
+
+          {/* Email */}
+          <div>
+            <label className="block text-sm font-medium mb-1">Email</label>
+            <input
+              type="email"
+              placeholder="you@example.com"
+              className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+              {...register("email", {
+                required: "Email is required",
+                pattern: {
+                  value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
+                  message: "Invalid email format",
+                },
+              })}
+            />
+            {errors.email && (
+              <p className="text-red-500 text-sm mt-1">{errors.email.message}</p>
+            )}
+          </div>
+
+          {/* Password */}
+          <div>
+            <label className="block text-sm font-medium mb-1">Password</label>
+            <input
+              type="password"
+              placeholder="••••••••"
+              className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+              {...register("password", {
+                required: "Password is required",
+                minLength: {
+                  value: 6,
+                  message: "Password must be at least 6 characters",
+                },
+              })}
+            />
+            {errors.password && (
+              <p className="text-red-500 text-sm mt-1">{errors.password.message}</p>
+            )}
+          </div>
+
+          {/* Confirm Password */}
+          <div>
+            <label className="block text-sm font-medium mb-1">Confirm Password</label>
+            <input
+              type="password"
+              placeholder="••••••••"
+              className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+              {...register("confirmPassword", {
+                required: "Please confirm your password",
+                validate: (value) =>
+                  value === watch("password") || "Passwords do not match",
+              })}
+            />
+            {errors.confirmPassword && (
+              <p className="text-red-500 text-sm mt-1">
+                {errors.confirmPassword.message}
+              </p>
+            )}
+          </div>
+
+          {/* Buttons */}
+          <div className="space-y-2">
+            <button
+              type="submit"
+              disabled={isSubmitting}
+              className="w-full bg-green-600 text-white py-2 rounded-lg hover:bg-green-700 disabled:opacity-50"
+            >
+              {isSubmitting ? "Signing up..." : "Sign Up"}
+            </button>
+
+            <button
+              type="button"
+              onClick={onSwitchToLogin}
+              className="w-full border border-gray-400 text-gray-700 py-2 rounded-lg hover:bg-gray-100"
+            >
+              Back to Login
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  );
 }
 
-function SignUpOverlay({ onSignUp }) {
-
-    const {
-        register,
-        handleSubmit,
-        formState: { errors, isSubmitting },
-    } = useForm();
-
-    const onSubmit = async (data) => {
-        // Simulate login API call
-        await new Promise((res) => setTimeout(res, 1000));
-        onSignUp(data.email); // Notify parent of successful login
-    };
-
-    return (<BackgroundBox>
-            <Card sx={{ maxWidth: 400, width: "100%", boxShadow: 6, borderRadius: 2 }}>
-            <CardContent sx={{ p: 4 }}>
-                <Typography variant="h5" component="h2" align="center" gutterBottom>
-                    Signup
-                </Typography>
-
-                <form onSubmit={handleSubmit(onSubmit)}>
-                    {/* Email */}
-                    <TextField
-                        fullWidth
-                        label="Email Address"
-                        margin="normal"
-                        variant="outlined"
-                        {...register("email", {
-                            required: "Email is required",
-                            pattern: {
-                                value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
-                                message: "Invalid email format",
-                            },
-                        })}
-                        error={!!errors.email}
-                        helperText={errors.email ? errors.email.message : ""}
-                    />
-
-                    {/* Password */}
-                    <TextField
-                        fullWidth
-                        type="password"
-                        label="Password"
-                        margin="normal"
-                        variant="outlined"
-                        {...register("password", {
-                            required: "Password is required",
-                            minLength: {
-                                value: 6,
-                                message: "Password must be at least 6 characters",
-                            },
-                        })}
-                        error={!!errors.password}
-                        helperText={errors.password ? errors.password.message : ""}
-                    />
-
-                    <Stack spacing={2} mt={3}>
-                        {/* Login button */}
-                        <Button
-                            type="submit"
-                            fullWidth
-                            variant="contained"
-                            color="primary"
-                            disabled={isSubmitting}
-                        >
-                            {isSubmitting ? "Signing up..." : "Sign up"}
-                        </Button>
-
-                        {/* Signup button */}
-                        <Button
-                            type="button"
-                            fullWidth
-                            variant="outlined"
-                            color="secondary"
-                            onClick={() => setIsOnSignup(false)}
-                        >
-                            Already have an account?
-                        </Button>
-                    </Stack>
-                </form>
-            </CardContent>
-        </Card>
-    </BackgroundBox>
-    
-    );
-}
-
-function LoginOverlay({ onLogin, setIsOnSignup }) {
-    const {
-        register,
-        handleSubmit,
-        formState: { errors, isSubmitting },
-    } = useForm();
-
-    const onSubmit = async (data) => {
-        // Simulate login API call
-        await new Promise((res) => setTimeout(res, 1000));
-        onLogin(data.email); // Notify parent of successful login
-    };
-
-    return (
-        <BackgroundBox>
-            <Card sx={{ maxWidth: 400, width: "100%", boxShadow: 6, borderRadius: 2 }}>
-                <CardContent sx={{ p: 4 }}>
-                    <Typography variant="h5" component="h2" align="center" gutterBottom>
-                        Login
-                    </Typography>
-
-                    <form onSubmit={handleSubmit(onSubmit)}>
-                        {/* Email */}
-                        <TextField
-                            fullWidth
-                            label="Email Address"
-                            margin="normal"
-                            variant="outlined"
-                            {...register("email", {
-                                required: "Email is required",
-                                pattern: {
-                                    value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
-                                    message: "Invalid email format",
-                                },
-                            })}
-                            error={!!errors.email}
-                            helperText={errors.email ? errors.email.message : ""}
-                        />
-
-                        {/* Password */}
-                        <TextField
-                            fullWidth
-                            type="password"
-                            label="Password"
-                            margin="normal"
-                            variant="outlined"
-                            {...register("password", {
-                                required: "Password is required",
-                                minLength: {
-                                    value: 6,
-                                    message: "Password must be at least 6 characters",
-                                },
-                            })}
-                            error={!!errors.password}
-                            helperText={errors.password ? errors.password.message : ""}
-                        />
-
-                        <Stack spacing={2} mt={3}>
-                            {/* Login button */}
-                            <Button
-                                type="submit"
-                                fullWidth
-                                variant="contained"
-                                color="primary"
-                                disabled={isSubmitting}
-                            >
-                                {isSubmitting ? "Logging in..." : "Login"}
-                            </Button>
-
-                            {/* Signup button */}
-                            <Button
-                                type="button"
-                                fullWidth
-                                variant="outlined"
-                                color="secondary"
-                                onClick={() => setIsOnSignup(true)}
-                            >
-                                Sign Up
-                            </Button>
-                        </Stack>
-                    </form>
-                </CardContent>
-            </Card>
-        </BackgroundBox>
-    );
-}

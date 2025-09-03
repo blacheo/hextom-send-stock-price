@@ -17,6 +17,8 @@ class RegisterAPI(APIView):
         user = User.objects.create_user(username=email, email=email, password=password)
         _, token = AuthToken.objects.create(user)
         return Response({"user": {"email": user.email}, "token": token}, status=status.HTTP_201_CREATED)
+    
+
 
 class LoginAPI(APIView):
     permission_classes = [permissions.AllowAny]
@@ -30,3 +32,5 @@ class LoginAPI(APIView):
         
         _, token = AuthToken.objects.create(user)
         return Response({"user": {"email": user.email}, "token": token})
+    
+

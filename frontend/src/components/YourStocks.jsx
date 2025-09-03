@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import Card from "./Card";
 
 export function YourStocks({isLoggedIn, setShowLogSignUpPopup}) {
     const [subscriptions, setSubscriptions] = useState([]);

@@ -1,55 +1,39 @@
-import React, { useState, createContext } from "react";
-import { useForm } from "react-hook-form";
-import { LoginSignupOverlay } from "./components/LoginOverlay";
-import { StockSubscriptionForm } from "./components/Subscribe";
-import { YourStocks } from "./components/YourStocks";
-import { API_BASE } from "./utilities/constants";
+import { useState, createContext } from "react";
+import { LoginOverlay } from "./components/LoginOverlay";
 
 export const SetShowLogSignUpPopupContext = createContext();
 export default function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [showLogInOrSignUpPopup, setShowLogSignUpPopup] = useState(false);
   const [userEmail, setUserEmail] = useState("");
-
+  const [authMode, setAuthMode] = useState("login"); // "login" or "signup"
 
   const handleLogin = (email) => {
     setUserEmail(email);
     setIsLoggedIn(true);
   };
 
-  const onSubscribe = async (email, stock_sticker) => {
-    try {
-      const response = await axios.post(`${API_BASE}`, {email: email, stock_sticker: stock_sticker})
-    } catch (err) {
-
-    }
-  };
-
-  const handleSignup = () => {
-    alert("Redirecting to signup page...");
-    // Here you could:
-    // - Show a SignupOverlay
-    // - Navigate to /signup route (if using React Router or Next.js)
+  const handleSignup = (email) => {
+    setUserEmail(email);
+    setIsLoggedIn(true);
   };
 
   return (
-    <>  
-      
-      {!isLoggedIn && showLogInOrSignUpPopup && (
-        <SetShowLogSignUpPopupContext value={setShowLogSignUpPopup}>
-          <LoginSignupOverlay onLogin={handleLogin} onSignup={handleSignup} setShowLogSignUpPopup={setShowLogSignUpPopup}/>
-        </SetShowLogSignUpPopupContext>
+    <div className="min-h-screen min-w-screen bg-gray-100 p-6">
+      {/* Overlays */}
+      {!isLoggedIn && authMode === "login" && (
+        <LoginOverlay onLogin={handleLogin} onSwitchToSignup={() => setAuthMode("signup")} />
       )}
-        <div className="flex-col justify-center items-center p-4 space-y-4 min-h-screen">
-          <StockSubscriptionForm onSubscribe={onSubscribe}/>
-          
-            <YourStocks isLoggedIn={isLoggedIn} setShowLogSignUpPopup={setShowLogSignUpPopup}/>
-          
+      {!isLoggedIn && authMode === "signup" && (
+        <SignupOverlay onSignup={handleSignup} onSwitchToLogin={() => setAuthMode("login")} />
+      )}
 
-          
-        </div>
-
-        
-    </>
+      {/* Main content */}
+      <h1 className="text-3xl font-bold">Welcome to the App</h1>
+      {isLoggedIn ? (
+        <p className="mt-2 text-gray-700">Logged in as {userEmail}</p>
+      ) : (
+        <p className="mt-2 text-gray-500">Please log in or sign up to continue.</p>
+      )}
+    </div>
   );
 }
