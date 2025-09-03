@@ -3,7 +3,7 @@ import { useForm } from "react-hook-form";
 import axios from "axios";
 import { API } from "../utilities/constants";
 
-export default function StockSubscription() {
+export default function StockSubscribe() {
   const { register, handleSubmit, formState: { errors }, reset } = useForm();
   const [message, setMessage] = useState("");
   const [error, setError] = useState("");
@@ -20,7 +20,7 @@ export default function StockSubscription() {
       setMessage("Subscription created successfully!");
       reset();
     } catch (err) {
-      setError("Failed to create subscription. Try again.");
+      setError("Failed to create subscription. Verify that your stock sticker exists.");
     }
   };
 

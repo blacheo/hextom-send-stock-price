@@ -17,24 +17,21 @@ export function LoginOverlay({ onLogin, onSwitchToSignup, dismiss }) {
         email: data.email,
         password: data.password,
     });
-
-    if (!response.ok) {
-      throw new Error("Login failed");
-    }
-
-    const result = await response.json();
-
+   
+    console.log(response.data)
     // If using Django REST Knox or JWT:
     // Save token in localStorage
-    if (result.token) {
-      localStorage.setItem("authToken", result.token);
+    if (response.data.token) {
+      localStorage.setItem("authToken", response.data.token);
+      localStorage.setItem("email", data.email)
+      console.log("email and token saved")
     }
 
     // Notify parent of login success
     onLogin(data.email);
   } catch (error) {
     console.error(error);
-    alert("Invalid credentials. Please try again.");
+    alert(error.response.data?.error);
   }
 };
 
@@ -124,8 +121,30 @@ export function SignupOverlay({ onSignup, onSwitchToLogin }) {
   } = useForm();
 
   const onSubmit = async (data) => {
-    await new Promise((res) => setTimeout(res, 1000)); // simulate API
+    try {
+    const response = await API.post("/api/auth/register/", {
+        email: data.email,
+        password: data.password,
+    });
+
+    if (!response.ok) {
+      throw new Error("Signup failed");
+    }
+
+    const result = await response.json();
+
+    // If using Django REST Knox or JWT:
+    // Save token in localStorage
+    if (result.token) {
+      localStorage.setItem("authToken", result.token);
+    }
+
+    // Notify parent of login success
     onSignup(data.email);
+  } catch (error) {
+    console.error(error);
+    alert(`Unable to signup. ${error.response.data?.error}`);
+  }
   };
 
   return (
@@ -135,18 +154,6 @@ export function SignupOverlay({ onSignup, onSwitchToLogin }) {
 
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
           {/* Name */}
-          <div>
-            <label className="block text-sm font-medium mb-1">Name</label>
-            <input
-              type="text"
-              placeholder="John Doe"
-              className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-              {...register("name", { required: "Name is required" })}
-            />
-            {errors.name && (
-              <p className="text-red-500 text-sm mt-1">{errors.name.message}</p>
-            )}
-          </div>
 
           {/* Email */}
           <div>

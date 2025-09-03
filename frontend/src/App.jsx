@@ -1,12 +1,13 @@
-import { useState, createContext } from "react";
+import { useState, createContext, useEffect } from "react";
 import { LoginOverlay, SignupOverlay } from "./components/LoginOverlay";
-import StockSubscription from "./components/StockSubscription";
+import { API } from "./utilities/constants";
+import StockSubscribe from "./components/StockSubscribe";
 
 export const SetShowLogSignUpPopupContext = createContext();
 export default function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [userEmail, setUserEmail] = useState("");
-  const [authMode, setAuthMode] = useState("login"); // "login" or "signup" or "none"
+  const [authMode, setAuthMode] = useState("none"); // "login" or "signup" or "none"
 
   const handleLogin = (email) => {
     setUserEmail(email);
@@ -17,6 +18,21 @@ export default function App() {
     setUserEmail(email);
     setIsLoggedIn(true);
   };
+
+  useEffect(() => {
+    const data = localStorage.getItem("authToken");
+    if (data) {
+      const email = localStorage.getItem("email")
+      handleLogin(email)
+      setIsLoggedIn(true)
+    } else {
+      console.log("no token found")
+    }
+    return () => setIsLoggedIn(false)
+  }, [])
+  
+
+  
 
   return (
     <div className="min-h-screen min-w-screen bg-gray-100 p-6">
@@ -42,7 +58,7 @@ export default function App() {
            <span className="text-blue-500 underline cursor-pointer" onClick={() => setAuthMode("signup")}>sign up</span> to view your subscriptions.</p>
       )}
 
-      <StockSubscription/>
+      <StockSubscribe/>
     </div>
   );
 }
