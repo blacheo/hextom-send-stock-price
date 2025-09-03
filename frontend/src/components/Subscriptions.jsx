@@ -27,7 +27,7 @@ export function Subscriptions() {
 
   }, []);
 
-  const handleUnsubscribe = async (stock_sticker) => {
+  const handleUnsubscribe = async (subscription) => {
     try {
       const token = localStorage.getItem("authToken");
       const response = await API.delete("subscription/own/", {
@@ -39,7 +39,7 @@ export function Subscriptions() {
         },
       })
       setSubscriptions((prev) =>
-        prev.filter((s) => s.stock_sticker !== stock_sticker)
+        prev.filter((s) => s.stock_sticker !== subscription.stock_sticker && s.email !== subscription.email)
       );
     } catch (err) {
       console.log(err)
@@ -62,12 +62,12 @@ export function Subscriptions() {
 
               <span className="space-x-2">
                 <button
-                onClick={() => handleUnsubscribe(sub.stock_sticker)}
-                className="bg-blue-500 text-white px-4 py-1 rounded-lg hover:bg-red-600 transition"
+                onClick={() => {}}
+                className="bg-blue-500 text-white px-4 py-1 rounded-lg hover:bg-blue-600 transition"
               >Send Now 📨</button>
               
               <button
-                onClick={() => handleUnsubscribe(sub.stock_sticker)}
+                onClick={() => handleUnsubscribe(sub)}
                 className="bg-red-500 text-white px-4 py-1 rounded-lg hover:bg-red-600 transition"
               >Unsubscribe</button>
               </span>
