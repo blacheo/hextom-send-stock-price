@@ -59,10 +59,20 @@ export function Subscriptions() {
             >
               <span>{sub.stock_sticker}</span>
               <span>${sub.stock_price}</span>
+
+              <span className="space-x-2">
+                <button
+                onClick={() => handleUnsubscribe(sub.stock_sticker)}
+                className="bg-blue-500 text-white px-4 py-1 rounded-lg hover:bg-red-600 transition"
+              >Send Now 📨</button>
+              
               <button
                 onClick={() => handleUnsubscribe(sub.stock_sticker)}
                 className="bg-red-500 text-white px-4 py-1 rounded-lg hover:bg-red-600 transition"
               >Unsubscribe</button>
+              </span>
+
+              
             </li>
           ))}
         </ul>

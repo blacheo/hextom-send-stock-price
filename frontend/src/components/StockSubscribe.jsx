@@ -41,10 +41,7 @@ export default function StockSubscribe({email}) {
           placeholder="Stock Ticker (e.g., ^FCHI)"
           {...register("ticker", {
             required: "Ticker is required",
-            pattern: {
-              value: /^\^[A-Z]{1,5}$/,
-              message: "Ticker must be 1-5 uppercase letters",
-            },
+      
           })}
           className="border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
         />
