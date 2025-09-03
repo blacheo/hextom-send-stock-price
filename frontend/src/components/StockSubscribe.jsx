@@ -11,10 +11,16 @@ export default function StockSubscribe({email}) {
   const onSubmit = async (data) => {
     setMessage("");
     setError("");
+    let email_form
+    if (email === null) {
+      email_form = data.email
+    } else {
+      email_form = email
+    }
 
     try {
       await API.post("subscriptions/add/", {
-        email: data.email,
+        email: email_form,
         stock_sticker: data.ticker.toUpperCase(),
       });
       setMessage("Subscription created successfully!");
@@ -45,11 +51,11 @@ export default function StockSubscribe({email}) {
         {errors.ticker && <div className="text-red-500 text-sm">{errors.ticker.message}</div>}
 
         {/* Email Input */}
-        <input
+        {email === null && (
+          <input
           type="email"
           placeholder="Email Address"
-          disabled={email !== null}
-          defaultValue={email || ""}
+
           {...register("email", {
             required: "Email is required",
             pattern: {
@@ -57,9 +63,10 @@ export default function StockSubscribe({email}) {
               message: "Invalid email address",
             },
           })}
-          className={`border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 
-            ${email ? "bg-gray-100 text-gray-600 cursor-not-allowed" : ""}`}
+          className={`border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 `}
         />
+        )}
+        
         {errors.email && <div className="text-red-500 text-sm">{errors.email.message}</div>}
 
         {/* Feedback messages */}

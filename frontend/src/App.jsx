@@ -23,7 +23,7 @@ export default function App() {
   const handleLogout = () => {
     setIsLoggedIn(false)
     setAuthMode("none")
-    setUserEmail("")
+    setUserEmail(null)
     localStorage.removeItem("authToken")
     localStorage.removeItem("email")
   }
