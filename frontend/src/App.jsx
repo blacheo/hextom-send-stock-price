@@ -65,10 +65,12 @@ export default function App() {
           {" "}
            or
            {" "} 
-           <span className="text-blue-500 underline cursor-pointer" onClick={() => setAuthMode("signup")}>sign up</span> to view your subscriptions.</p>
+           <span className="text-blue-500 underline cursor-pointer" onClick={() => setAuthMode("signup")}>sign up</span> to view your subscriptions and to subscribe to stocks.</p>
       )}
 
-      <StockSubscribe email={userEmail}/>
+      {isLoggedIn && (<StockSubscribe email={userEmail}/>)}
+
+      
 
       {isLoggedIn && (<Subscriptions/>) }
       
