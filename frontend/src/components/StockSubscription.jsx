@@ -1,26 +1,21 @@
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import axios from "axios";
+import { API } from "../utilities/constants";
 
 export default function StockSubscription() {
   const { register, handleSubmit, formState: { errors }, reset } = useForm();
   const [message, setMessage] = useState("");
   const [error, setError] = useState("");
 
-  const API = axios.create({
-    baseURL: "http://127.0.0.1:8000/api",
-    withCredentials: true,
-    headers: { "Content-Type": "application/json" },
-  });
-
   const onSubmit = async (data) => {
     setMessage("");
     setError("");
 
     try {
-      await API.post("/subscriptions/", {
-        ticker: data.ticker.toUpperCase(),
+      await API.post("subscriptions/add/", {
         email: data.email,
+        stock_sticker: data.ticker.toUpperCase(),
       });
       setMessage("Subscription created successfully!");
       reset();
@@ -37,11 +32,11 @@ export default function StockSubscription() {
         {/* Stock Ticker Input */}
         <input
           type="text"
-          placeholder="Stock Ticker (e.g., AAPL)"
+          placeholder="Stock Ticker (e.g., ^FCHI)"
           {...register("ticker", {
             required: "Ticker is required",
             pattern: {
-              value: /^[A-Z]{1,5}$/,
+              value: /^\^[A-Z]{1,5}$/,
               message: "Ticker must be 1-5 uppercase letters",
             },
           })}

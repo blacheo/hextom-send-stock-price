@@ -1,14 +1,7 @@
 import React, { useState } from "react";
 import { useForm } from "react-hook-form";
-import axios from "axios";
+import {API} from '../utilities/constants';
 
-const API = axios.create({
-    baseURL: import.meta.env.VITE_APP_API_URL,
-    withCredentials: true, // important for cookies / session auth
-    headers: {
-      "Content-Type": "application/json",
-    },
-})
 
 // Login Overlay
 export function LoginOverlay({ onLogin, onSwitchToSignup, dismiss }) {
