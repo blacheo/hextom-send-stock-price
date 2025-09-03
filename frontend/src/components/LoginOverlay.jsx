@@ -112,7 +112,7 @@ export function LoginOverlay({ onLogin, onSwitchToSignup, dismiss }) {
 }
 
 // Signup Overlay
-export function SignupOverlay({ onSignup, onSwitchToLogin }) {
+export function SignupOverlay({ onSignup, onSwitchToLogin, dismiss }) {
   const {
     register,
     handleSubmit,
@@ -150,6 +150,12 @@ export function SignupOverlay({ onSignup, onSwitchToLogin }) {
   return (
     <div className="fixed inset-0 bg-black/30 backdrop-blur-sm bg-opacity-50 flex items-center justify-center z-50">
       <div className="bg-white rounded-2xl shadow-lg w-full max-w-md p-6">
+        <button
+          onClick={dismiss}
+          className="absolute top-2 right-2 text-gray-500 hover:text-gray-700"
+        >
+          ✕
+        </button>
         <h2 className="text-2xl font-semibold text-center mb-6">Sign Up</h2>
 
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
