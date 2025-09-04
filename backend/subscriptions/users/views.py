@@ -29,8 +29,9 @@ class LoginAPI(APIView):
         user = authenticate(username=email, password=password)
         if not user:
             return Response({"error": "Invalid credentials"}, status=status.HTTP_400_BAD_REQUEST)
-        
+    
+
         _, token = AuthToken.objects.create(user)
-        return Response({"user": {"email": user.email}, "token": token}, status=status.HTTP_200_OK)
+        return Response({"user": {"email": user.email}, "token": token, "is_admin": user.is_superuser}, status=status.HTTP_200_OK)
     
 

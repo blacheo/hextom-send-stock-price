@@ -20,8 +20,11 @@ class SubscriptionSeeOwn(APIView):
         return Response(serializer.data)
     
     def delete(self, request):
+        if request.user.email != request.data.get("email") and not request.user.is_superuser:
+            return Response({"message": "Only admins can delete another user's subscription"}, status=status.HTTP_401_UNAUTHORIZED)
+
         try:
-            subscription = Subscription.objects.get(email=request.user.email, stock_sticker=request.data.get("stock_sticker"))
+            subscription = Subscription.objects.get(email=request.data.get("email"), stock_sticker=request.data.get("stock_sticker"))
         except Subscription.DoesNotExist:
             return Response({"error": "Subscription not found"}, status=status.HTTP_404_NOT_FOUND)
         subscription.delete()

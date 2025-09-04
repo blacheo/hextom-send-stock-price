@@ -4,7 +4,7 @@ import {API} from '../utilities/constants';
 
 
 // Login Overlay
-export function LoginOverlay({ onLogin, onSwitchToSignup, dismiss }) {
+export function LoginOverlay({ onLogin, onSwitchToSignup, dismiss, setIsAdmin }) {
   const {
     register,
     handleSubmit,
@@ -18,13 +18,16 @@ export function LoginOverlay({ onLogin, onSwitchToSignup, dismiss }) {
         password: data.password,
     });
    
-    console.log(response.data)
+    console.log(response)
     // If using Django REST Knox or JWT:
     // Save token in localStorage
     if (response.data.token) {
       localStorage.setItem("authToken", response.data.token);
       localStorage.setItem("email", data.email)
+      localStorage.setItem("is_admin", response.data.is_admin)
       console.log("email and token saved")
+
+      setIsAdmin(response.data.is_admin)
     }
 
     // Notify parent of login success

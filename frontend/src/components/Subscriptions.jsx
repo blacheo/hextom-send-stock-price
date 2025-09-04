@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { API } from "../utilities/constants";
 
-export function Subscriptions() {
+export function Subscriptions({isAdmin}) {
   const [subscriptions, setSubscriptions] = useState([]);
   const [error, setError] = useState(null);
 
@@ -52,11 +52,12 @@ export function Subscriptions() {
           Authorization: `Token ${token}`, // Knox expects "Token <token>"
         },
         data: {
-          stock_sticker: stock_sticker
+          email: subscription.email,
+          stock_sticker: subscription.stock_sticker
         },
       })
       setSubscriptions((prev) =>
-        prev.filter((s) => s.stock_sticker !== subscription.stock_sticker && s.email !== subscription.email)
+        prev.filter((s) => s.stock_sticker !== subscription.stock_sticker || s.email !== subscription.email)
       );
     } catch (err) {
       console.log(err)
@@ -76,6 +77,7 @@ export function Subscriptions() {
             >
               <span>{sub.stock_sticker}</span>
               <span>${sub.stock_price}</span>
+              {isAdmin && (<span>{sub.email}</span>)}
 
               <span className="space-x-2">
                 <button

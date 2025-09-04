@@ -9,6 +9,7 @@ export default function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [userEmail, setUserEmail] = useState(null);
   const [authMode, setAuthMode] = useState("none"); // "login" or "signup" or "none"
+  const [isAdmin, setIsAdmin] = useState(false);
 
   const handleLogin = (email) => {
     setUserEmail(email);
@@ -24,12 +25,19 @@ export default function App() {
     setIsLoggedIn(false)
     setAuthMode("none")
     setUserEmail(null)
+
     localStorage.removeItem("authToken")
     localStorage.removeItem("email")
+    localStorage.removeItem("is_admin")
   }
 
   useEffect(() => {
     const data = localStorage.getItem("authToken");
+    const is_admin = localStorage.getItem("is_admin");
+    if (is_admin) {
+      setIsAdmin(true)
+    }
+
     if (data) {
       const email = localStorage.getItem("email")
       handleLogin(email)
@@ -47,7 +55,7 @@ export default function App() {
     <div className="min-h-screen min-w-screen bg-gray-100 p-6">
       {/* Overlays */}
       {!isLoggedIn && authMode === "login" && (
-        <LoginOverlay onLogin={handleLogin} onSwitchToSignup={() => setAuthMode("signup") } dismiss={() => setAuthMode("none")} />
+        <LoginOverlay onLogin={handleLogin} onSwitchToSignup={() => setAuthMode("signup") } dismiss={() => setAuthMode("none") } setIsAdmin={setIsAdmin} />
       )}
       {!isLoggedIn && authMode === "signup" && (
         <SignupOverlay onSignup={handleSignup} onSwitchToLogin={() => setAuthMode("login")} dismiss={() => setAuthMode("none")} />
@@ -66,13 +74,16 @@ export default function App() {
            or
            {" "} 
            <span className="text-blue-500 underline cursor-pointer" onClick={() => setAuthMode("signup")}>sign up</span> to view your subscriptions and to subscribe to stocks.</p>
+           
       )}
+
+      {isAdmin && (<p>logged in as admin</p>)}
 
       {isLoggedIn && (<StockSubscribe email={userEmail}/>)}
 
       
 
-      {isLoggedIn && (<Subscriptions/>) }
+      {isLoggedIn && (<Subscriptions isAdmin={isAdmin}/>) }
       
     </div>
   );
