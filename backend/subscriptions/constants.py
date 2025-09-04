@@ -3,3 +3,4 @@ MAX_STOCK_STICKER_LENGTH = 50
 
 GET_SUBSCRIPTION_NAME = 'subscriptions-own'
 PUT_SUBSCRIPTION = "subscription-create"
+EMAIL_NAME = "email-view"

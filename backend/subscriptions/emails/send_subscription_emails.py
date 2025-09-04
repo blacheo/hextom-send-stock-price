@@ -17,7 +17,7 @@ def send_subscription_stock_emails_scheduled():
     subs = Subscription.objects.all()
     
     for sub in subs:
-        grouped_stocks[sub.email].append({"ticker": sub.stock_sticker, "price": get_stock_price(sub)})
+        grouped_stocks[sub.email].append([sub.stock_sticker, get_stock_price(sub)])
 
     send_subscription_stock_emails(grouped_stocks)
 
@@ -38,7 +38,7 @@ def send_subscription_stock_emails(grouped_stocks: Dict[str, List[Tuple[str, int
 
         # Plain text fallback
         text_content = "Here are your stock prices:\n" + "\n".join(
-            [f"{s['ticker']}: {s['price']}" for s in subs]
+            [f"{s[0]}: {s[1]}" for s in subs]
         )
 
         # HTML version using template
