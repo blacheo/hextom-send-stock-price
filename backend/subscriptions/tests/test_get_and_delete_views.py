@@ -1,5 +1,5 @@
 from django.urls import reverse
-from subscriptions.constants import GET_ALL_NAME, OWN_NAME
+from subscriptions.constants import GET_SUBSCRIPTION_NAME
 from subscriptions.models import Subscription
 from rest_framework.test import APITestCase
 from rest_framework import status
@@ -11,14 +11,13 @@ class SubscriptionAPIGetTests(APITestCase):
         Subscription.objects.create(email="abc@gmail.com", stock_sticker="^IXIC")
         Subscription.objects.create(email="xyz@gmail.com", stock_sticker="^DJI")
         self.user_abc = User.objects.create_user("abc@gmail.com", "abc@gmail.com", "a password")
-        self.get_all_url = reverse(GET_ALL_NAME)
-        self.get_own_url = reverse(OWN_NAME)
+        self.get_subscriptions = reverse(GET_SUBSCRIPTION_NAME)
     
     def test_succesfully_delete_subscription(self):
         _, token_string = AuthToken.objects.create(self.user_abc)
         self.client.credentials(HTTP_AUTHORIZATION=f"Token {token_string}")
         Subscription.objects.create(email="abc@gmail.com", stock_sticker="^VIX")
-        response = self.client.delete(self.get_own_url, {"stock_sticker": "^VIX"})
+        response = self.client.delete(self.get_subscriptions, {"stock_sticker": "^VIX"})
 
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
 
@@ -28,7 +27,7 @@ class SubscriptionAPIGetTests(APITestCase):
     def test_failure_delete_subscription_does_not_exist(self):
         _, token_string = AuthToken.objects.create(self.user_abc)
         self.client.credentials(HTTP_AUTHORIZATION=f"Token {token_string}")
-        response = self.client.delete(self.get_own_url, {"stock_sticker": "^VIX"})
+        response = self.client.delete(self.get_subscriptions, {"stock_sticker": "^VIX"})
 
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
 
@@ -36,7 +35,7 @@ class SubscriptionAPIGetTests(APITestCase):
         
         _, token_string = AuthToken.objects.create(self.user_abc)
         self.client.credentials(HTTP_AUTHORIZATION=f"Token {token_string}")
-        response = self.client.get(self.get_own_url, {})
+        response = self.client.get(self.get_subscriptions, {})
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual({sub["stock_sticker"] for sub in response.data}, {"^IXIC"})
@@ -49,17 +48,17 @@ class SubscriptionAPIGetTests(APITestCase):
         _, token_string = AuthToken.objects.create(my_admin)
  
         self.client.credentials(HTTP_AUTHORIZATION=f"Token {token_string}")
-        response = self.client.get(self.get_all_url, {})
+        response = self.client.get(self.get_subscriptions, {})
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(len(response.data), 2)
         
         self.assertEqual({sub["stock_sticker"] for sub in response.data}, {"^IXIC", "^DJI"}, response.data)
 
     def test_get_subscription_failure_not_logged_in(self):
-        response = self.client.get(self.get_own_url, {})
+        response = self.client.get(self.get_subscriptions, {})
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
 
     def test_get_subscription_failure_not_admin(self):
-        response = self.client.get(self.get_all_url, {})
+        response = self.client.get(self.get_subscriptions, {})
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
         

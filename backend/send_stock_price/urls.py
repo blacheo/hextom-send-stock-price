@@ -18,14 +18,13 @@ from django.contrib import admin
 from django.urls import include, path
 
 from subscriptions.users.views import LoginAPI, RegisterAPI
-from subscriptions.constants import GET_ALL_NAME, OWN_NAME, PUT_SUBSCRIPTION
+from subscriptions.constants import GET_SUBSCRIPTION_NAME, PUT_SUBSCRIPTION
 from subscriptions.views import SubscriptionCreate, SubscriptionListAll, SubscriptionSeeOwn
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('subscriptions/add/', SubscriptionCreate.as_view(), name=PUT_SUBSCRIPTION),
-    path('subscriptions/getall/', SubscriptionListAll.as_view(), name=GET_ALL_NAME),
-    path('subscription/own/', SubscriptionSeeOwn.as_view(), name=OWN_NAME),
+    path('subscription/own/', SubscriptionSeeOwn.as_view(), name=GET_SUBSCRIPTION_NAME),
     path(r'api/auth/', include('knox.urls')),
     path('api/auth/register/', RegisterAPI.as_view(), name='register'),
     path('api/auth/login/', LoginAPI.as_view(), name='login'),

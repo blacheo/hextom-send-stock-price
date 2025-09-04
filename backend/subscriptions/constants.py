@@ -1,6 +1,5 @@
 MAX_EMAIL_LENGTH = 200
 MAX_STOCK_STICKER_LENGTH = 50
 
-OWN_NAME = 'subscriptions-own'
-GET_ALL_NAME = 'subscription-get-all'
+GET_SUBSCRIPTION_NAME = 'subscriptions-own'
 PUT_SUBSCRIPTION = "subscription-create"
