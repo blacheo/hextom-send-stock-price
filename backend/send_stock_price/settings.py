@@ -38,6 +38,10 @@ CORS_ALLOW_ALL_ORIGINS = True
 
 CORS_ALLOW_CREDENTIALS = True 
 
+# settings.py
+EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
+
+
 INSTALLED_APPS = [
     "corsheaders",
     'django.contrib.admin',
