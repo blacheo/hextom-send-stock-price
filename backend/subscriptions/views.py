@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from rest_framework import permissions, viewsets, status
+from rest_framework import permissions, status
 from rest_framework.views import APIView
 from knox.auth import TokenAuthentication
 from subscriptions.models import Subscription
@@ -12,7 +12,10 @@ class SubscriptionSeeOwn(APIView):
     authentication_classes = [TokenAuthentication]
 
     def get(self, request):
-        subscriptions = Subscription.objects.filter(email=request.user.email)
+        if request.user.is_superuser:
+            subscriptions = Subscription.objects.all()
+        else:
+            subscriptions = Subscription.objects.filter(email=request.user.email)
         serializer = SubscriptionSerializer(subscriptions, many=True)
         return Response(serializer.data)
     
