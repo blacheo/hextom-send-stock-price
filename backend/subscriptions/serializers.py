@@ -27,5 +27,5 @@ class SubscriptionSerializer(serializers.ModelSerializer):
         return attrs
 
     def get_stock_price(self, data: Subscription):
-        return get_stock_price(data)
+        return get_stock_price(data.stock_sticker)
     

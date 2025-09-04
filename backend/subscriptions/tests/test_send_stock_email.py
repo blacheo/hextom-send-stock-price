@@ -1,7 +1,7 @@
 from django.test import TestCase, override_settings
 from django.core import mail
 from unittest.mock import patch, MagicMock
-from subscriptions.tasks import send_subscription_emails
+from subscriptions.emails.send_subscription_emails import send_subscription_stock_emails_scheduled
 from subscriptions.models import Subscription
 
 
@@ -21,7 +21,7 @@ class SimpleEmailTest(TestCase):
         mock_ticker.return_value.history.return_value = mock_history
 
         # Run the task
-        send_subscription_emails.send_subscription_stock_emails()
+        send_subscription_stock_emails_scheduled()
 
         # Assert 2 emails (one per unique email)
         self.assertEqual(len(mail.outbox), 2)

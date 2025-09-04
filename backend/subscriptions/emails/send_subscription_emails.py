@@ -1,5 +1,5 @@
 from collections import defaultdict
-from typing import Tuple
+from typing import Dict, List, Tuple
 from celery import shared_task
 import pytz
 from subscriptions.utilities.get_stock_price import get_stock_price
@@ -8,18 +8,29 @@ from django.core.mail import EmailMultiAlternatives
 from django.template.loader import render_to_string
 from django.utils import timezone
 
+
+
 @shared_task
-def send_subscription_stock_emails():
+def send_subscription_stock_emails_scheduled():
+    grouped_stocks: defaultdict[str, list[Tuple[str, int]]] = defaultdict(list)
+
+    subs = Subscription.objects.all()
+    
+    for sub in subs:
+        grouped_stocks[sub.email].append({"ticker": sub.stock_sticker, "price": get_stock_price(sub)})
+
+    send_subscription_stock_emails(grouped_stocks)
+
+    """ _summary_: Sends an email summary of 
+    grouped_stocks: dictionary of emails to list of (stock_sticker, price) tuples
+    """
+def send_subscription_stock_emails(grouped_stocks: Dict[str, List[Tuple[str, int]]]):
     tz = pytz.timezone("America/Toronto")
     now = timezone.now().astimezone(tz)
     
-    subs = Subscription.objects.all()
-    grouped: defaultdict[str, list[Tuple[str, int]]] = defaultdict(list)
+    
 
-    for sub in subs:
-        grouped[sub.email].append({"ticker": sub.stock_sticker, "price": get_stock_price(sub)})
-
-    for email, subs in grouped.items():
+    for email, subs in grouped_stocks.items():
         context = {"stocks": subs, "time": now.strftime("%B %d, %Y %H:%M %Z")}
         subject = "📈 Your Stock Update"
         from_email = "noreply@myapp.com"
