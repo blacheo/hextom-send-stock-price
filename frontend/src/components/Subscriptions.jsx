@@ -27,6 +27,23 @@ export function Subscriptions() {
 
   }, []);
 
+  const handleSendNow = async (subscription) => {
+    try {
+      const token = localStorage.getItem("authToken");
+      const response = await API.get(`email/?stock_sticker=${encodeURIComponent(subscription.stock_sticker)}`, {
+        headers: {
+          Authorization: `Token ${token}`, // Knox expects "Token <token>"
+        },
+        data: {
+          stock_sticker: subscription.stock_sticker
+        },
+      })
+    } catch (err) {
+      console.log(err)
+
+    }
+  }
+
   const handleUnsubscribe = async (subscription) => {
     try {
       const token = localStorage.getItem("authToken");
@@ -62,7 +79,7 @@ export function Subscriptions() {
 
               <span className="space-x-2">
                 <button
-                onClick={() => {}}
+                onClick={() => handleSendNow(sub)}
                 className="bg-blue-500 text-white px-4 py-1 rounded-lg hover:bg-blue-600 transition"
               >Send Now 📨</button>
               
