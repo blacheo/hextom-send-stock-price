@@ -38,9 +38,10 @@ export function Subscriptions({isAdmin}) {
           stock_sticker: subscription.stock_sticker
         },
       })
+      alert("Sending email!")
     } catch (err) {
       console.log(err)
-
+      alert("Unable to send email")
     }
   }
 

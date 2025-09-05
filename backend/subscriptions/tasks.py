@@ -1,0 +1,20 @@
+from collections import defaultdict
+from typing import Dict
+from celery import shared_task
+
+from subscriptions.emails.chatgpt import stock_advice
+from subscriptions.emails.send_subscription_emails import send_subscription_stock_emails
+from subscriptions.models import Subscription
+from subscriptions.utilities import get_stock_price
+
+
+@shared_task
+def send_subscription_stock_emails_scheduled():
+    grouped_stocks: defaultdict[str, list[Dict[str, int]]] = defaultdict(list)
+
+    subs = Subscription.objects.all()
+    
+    for sub in subs:
+        grouped_stocks[sub.email].append({"stock_sticker" : sub.stock_sticker, "price" : get_stock_price(sub), "decision" : stock_advice(sub.stock_sticker)})
+
+    send_subscription_stock_emails(grouped_stocks)

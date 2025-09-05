@@ -1,5 +1,6 @@
 from rest_framework.views import APIView
 
+from subscriptions.emails.chatgpt import stock_advice
 from subscriptions.utilities.get_stock_price import get_stock_price
 from subscriptions.emails.send_subscription_emails import send_subscription_stock_emails
 from rest_framework.response import Response
@@ -15,7 +16,7 @@ class EmailViews(APIView):
         stock_sticker = request.query_params.get("stock_sticker")
 
         try:
-            grouped_stocks = {email : [(stock_sticker, get_stock_price(stock_sticker))]}
+            grouped_stocks = {email : [{"stock_sticker": stock_sticker, "price" : get_stock_price(stock_sticker), "decision" : stock_advice(stock_sticker)}]}
         except Exception as e:
             print(e)
             return  Response({"error": "Stock Sticker is either delisted or does not exist"}, status=status.HTTP_409_CONFLICT) 
