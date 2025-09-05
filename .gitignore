@@ -1,2 +1,4 @@
 frontend/test-results/.last-run.json
 **/test-results/
+backend/send_stock_price/settings.py
+backend/dist/backend-0.1.0.tar.gz

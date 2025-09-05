@@ -27,14 +27,11 @@ SECRET_KEY = config("SECRET_KEY")
 DEBUG = True
 
 ALLOWED_HOSTS = []
-
-CORS_ALLOW_ALL_ORIGINS = True
 # Application definition
 
-"""CORS_ALLOWED_ORIGINS = [
-    "http://localhost:5137",  # React dev server
-    "http://127.0.0.1:5137",
-]"""
+CORS_ALLOWED_ORIGINS = [
+    "https://blacheo.github.io/hextom-send-stock-price/"
+]
 
 CORS_ALLOW_CREDENTIALS = True 
 
