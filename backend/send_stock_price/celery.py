@@ -1,8 +1,9 @@
+import os
 from celery import Celery
 from celery.schedules import crontab
 import pytz
 
-
+os.environ.setdefault("DJANGO_SETTINGS_MODULE", "send_stock_price.settings")
 
 app = Celery("email_sender")
 
