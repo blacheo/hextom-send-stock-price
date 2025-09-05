@@ -3,6 +3,7 @@ import { LoginOverlay, SignupOverlay } from "./components/LoginOverlay";
 import { API } from "./utilities/constants";
 import StockSubscribe from "./components/StockSubscribe";
 import { Subscriptions } from "./components/Subscriptions";
+import News from "./components/bonus_feature/News";
 
 export const SetShowLogSignUpPopupContext = createContext();
 export default function App() {
@@ -47,15 +48,15 @@ export default function App() {
     }
     return () => setIsLoggedIn(false)
   }, [])
-  
 
-  
+
+
 
   return (
     <div className="min-h-screen min-w-screen bg-gray-100 p-6">
       {/* Overlays */}
       {!isLoggedIn && authMode === "login" && (
-        <LoginOverlay onLogin={handleLogin} onSwitchToSignup={() => setAuthMode("signup") } dismiss={() => setAuthMode("none") } setIsAdmin={setIsAdmin} />
+        <LoginOverlay onLogin={handleLogin} onSwitchToSignup={() => setAuthMode("signup")} dismiss={() => setAuthMode("none")} setIsAdmin={setIsAdmin} />
       )}
       {!isLoggedIn && authMode === "signup" && (
         <SignupOverlay onSignup={handleSignup} onSwitchToLogin={() => setAuthMode("login")} dismiss={() => setAuthMode("none")} />
@@ -65,26 +66,37 @@ export default function App() {
       <h1 className="text-3xl font-bold">Stock Tracker</h1>
       {isLoggedIn ? (
         <p className="mt-2 text-gray-700">Logged in as {userEmail} {" "}
-        <span className="text-blue-500 underline cursor-pointer" onClick={handleLogout}>logout?</span></p> 
+          <span className="text-blue-500 underline cursor-pointer" onClick={handleLogout}>logout?</span></p>
       ) : (
         <p className="mt-2 text-gray-500">Please{" "}
-        <span className="text-blue-500 underline cursor-pointer" onClick={() => setAuthMode("login")}>
-          log in</span>
+          <span className="text-blue-500 underline cursor-pointer" onClick={() => setAuthMode("login")}>
+            log in</span>
           {" "}
-           or
-           {" "} 
-           <span className="text-blue-500 underline cursor-pointer" onClick={() => setAuthMode("signup")}>sign up</span> to view your subscriptions and to subscribe to stocks.</p>
-           
+          or
+          {" "}
+          <span className="text-blue-500 underline cursor-pointer" onClick={() => setAuthMode("signup")}>sign up</span> to view your subscriptions and to subscribe to stocks.</p>
+
       )}
 
       {isAdmin && (<p>logged in as admin</p>)}
 
-      {isLoggedIn && (<StockSubscribe email={userEmail}/>)}
+      {isLoggedIn && <StockSubscribe email={userEmail} />}
 
-      
+      {isLoggedIn && <Subscriptions isAdmin={isAdmin} />}
 
-      {isLoggedIn && (<Subscriptions isAdmin={isAdmin}/>) }
-      
+      {isLoggedIn && (
+        <>
+          <h2 className="text-xl font-bold text-center text-gray-800">
+            Related News Articles
+          </h2>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 w-full max-w-6xl mx-auto p-6">
+
+            <News />
+          </div>
+        </>
+
+      )}
+
     </div>
   );
 }

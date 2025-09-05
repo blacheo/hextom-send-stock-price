@@ -1,13 +1,13 @@
 from django.urls import reverse
 from rest_framework import status
 from rest_framework.test import APITestCase
-from subscriptions.constants import PUT_SUBSCRIPTION
+from subscriptions.constants import PUT_SUBSCRIPTION_NAME
 from subscriptions.models import Subscription
 
 class SubscriptionPutAPITests(APITestCase):
     def setUp(self):
         Subscription.objects.create(email="abc@gmail.com", stock_sticker="DOW")
-        self.add_url = reverse(PUT_SUBSCRIPTION)
+        self.add_url = reverse(PUT_SUBSCRIPTION_NAME)
         
 
     def test_new_subscription_success(self):
