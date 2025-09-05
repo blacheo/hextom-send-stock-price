@@ -47,11 +47,13 @@
       <tr>
         <th>Ticker</th>
         <th>Price</th>
+        <th>Advice</th>
       </tr>
       {% for stock in stocks %}
       <tr>
-        <td>{{ stock.ticker }}</td>
+        <td>{{ stock.stock_sticker }}</td>
         <td>${{ stock.price }}</td>
+        <td>{{ stock.decision }}</td>
       </tr>
       {% endfor %}
     </table>
