@@ -25,3 +25,4 @@ def setup_periodic_email_tasks(sender: Celery, **kwargs):
         send_subscription_stock_emails_scheduled.s(),
         name="send_subscription_emails_work_hours"
     )
+
