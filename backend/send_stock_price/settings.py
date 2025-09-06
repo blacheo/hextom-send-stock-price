@@ -155,3 +155,7 @@ EMAIL_USE_TLS = True
 EMAIL_USE_SSL = False
 
 CELERY_BROKER_URL =  config("CELERY_BROKER_URL")
+
+DATABASES = {
+    "default": config("DATABASE_URL", default="sqlite:///db.sqlite3"),
+}
