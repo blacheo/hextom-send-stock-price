@@ -93,7 +93,7 @@ WSGI_APPLICATION = 'send_stock_price.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': config("DATABASE_URL"),
+        'ENGINE': config("DATABASE_TYPE"),
         'NAME': BASE_DIR / 'db.sqlite3',
     }
 }

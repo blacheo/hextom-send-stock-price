@@ -2,8 +2,8 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { API } from "../utilities/constants";
 
-export function Subscriptions({isAdmin}) {
-  const [subscriptions, setSubscriptions] = useState([]);
+export function Subscriptions({isAdmin, subscriptions, setSubscriptions}) {
+  
   const [error, setError] = useState(null);
 
   useEffect(() => {

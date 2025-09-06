@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { API } from "../utilities/constants";
 
-export default function StockSubscribe({ email }) {
+export default function StockSubscribe({ email, setSubscriptions }) {
   const { register, handleSubmit, formState: { errors }, reset } = useForm();
   const [message, setMessage] = useState("");
   const [error, setError] = useState("");
@@ -17,7 +17,7 @@ export default function StockSubscribe({ email }) {
     setMessage("");
     setError("");
     try {
-      await API.post("subscription/own/", {
+      let response = await API.post("subscription/own/", {
         "stock_sticker": data.ticker.toUpperCase(),
       }, {
         headers: {
@@ -26,6 +26,8 @@ export default function StockSubscribe({ email }) {
       },
       );
       setMessage("Subscription created successfully!");
+      console.log(response.data)
+      setSubscriptions((prevSubscriptions) => [...prevSubscriptions, {"stock_sticker": data.ticker, "email": email, "stock_price": response.data.stock_price}])
       reset();
     } catch (err) {
       console.log(err)

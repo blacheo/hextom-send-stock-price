@@ -11,6 +11,7 @@ export default function App() {
   const [userEmail, setUserEmail] = useState(null);
   const [authMode, setAuthMode] = useState("none"); // "login" or "signup" or "none"
   const [isAdmin, setIsAdmin] = useState(false);
+  const [subscriptions, setSubscriptions] = useState([]);
 
   const handleLogin = (email) => {
     setUserEmail(email);
@@ -80,9 +81,9 @@ export default function App() {
 
       {isAdmin && (<p>logged in as admin</p>)}
 
-      {isLoggedIn && <StockSubscribe email={userEmail} />}
+      {isLoggedIn && <StockSubscribe email={userEmail} setSubscriptions={setSubscriptions}/>}
 
-      {isLoggedIn && <Subscriptions isAdmin={isAdmin} />}
+      {isLoggedIn && <Subscriptions isAdmin={isAdmin} subscriptions={subscriptions} setSubscriptions={setSubscriptions}/>}
 
       {isLoggedIn && (
         <>
