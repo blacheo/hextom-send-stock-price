@@ -7,8 +7,6 @@ from subscriptions.emails.send_subscription_emails import send_subscription_stoc
 from subscriptions.models import Subscription
 from subscriptions.utilities import get_stock_price
 
-
-@shared_task
 def send_subscription_stock_emails_scheduled():
     grouped_stocks: defaultdict[str, list[Dict[str, int]]] = defaultdict(list)
 

@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'knox',
     'subscriptions',
+    'django_crontab'
     
 ]
 CORS_ALLOW_ALL_ORIGINS = True
@@ -50,6 +51,9 @@ CORS_ALLOWED_ORIGIN_REGEXES = [
     "http://127.0.0.1:5173", 
 ]
 
+CRONJOBS = [
+    ('0 9-17 * * 1-5', 'subscriptions.tasks.send_subscription_stock_emails_scheduled')
+]
 
 APPEND_SLASH = False
 
@@ -168,5 +172,4 @@ EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 EMAIL_USE_SSL = False
 
-CELERY_BROKER_URL =  config("CELERY_BROKER_URL")
 
