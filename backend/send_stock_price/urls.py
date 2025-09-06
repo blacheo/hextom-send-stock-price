@@ -17,6 +17,7 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import include, path
 
+from subscriptions.html.views import IndexView
 from subscriptions.bonus_feature.views import SubscriptionNews
 from subscriptions.emails.email_views import EmailViews
 from subscriptions.users.views import LoginAPI, RegisterAPI
@@ -29,7 +30,7 @@ urlpatterns = [
     path('api/auth/login/', LoginAPI.as_view(), name='login'),
     path(r'api/auth/', include('knox.urls')),
     path('api/auth/register/', RegisterAPI.as_view(), name='register'),
-    
+    path('', IndexView.as_view(), name="index"),
     path('email/', EmailViews.as_view(), name=EMAIL_NAME),
     path('news/', SubscriptionNews.as_view(), name=NEWS_NAME)
 ]

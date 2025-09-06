@@ -93,7 +93,7 @@ WSGI_APPLICATION = 'send_stock_price.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
+        'ENGINE': config("DATABASE_URL"),
         'NAME': BASE_DIR / 'db.sqlite3',
     }
 }
@@ -156,6 +156,3 @@ EMAIL_USE_SSL = False
 
 CELERY_BROKER_URL =  config("CELERY_BROKER_URL")
 
-DATABASES = {
-    "default": config("DATABASE_URL", default="sqlite:///db.sqlite3"),
-}
