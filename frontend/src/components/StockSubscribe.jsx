@@ -1,31 +1,34 @@
 import { useState } from "react";
 import { useForm } from "react-hook-form";
-import axios from "axios";
 import { API } from "../utilities/constants";
 
-export default function StockSubscribe({email}) {
+export default function StockSubscribe({ email }) {
   const { register, handleSubmit, formState: { errors }, reset } = useForm();
   const [message, setMessage] = useState("");
   const [error, setError] = useState("");
 
   const onSubmit = async (data) => {
-    setMessage("");
-    setError("");
-    let email_form
-    if (email === null) {
-      email_form = data.email
-    } else {
-      email_form = email
+    const token = localStorage.getItem("authToken");
+    if (!token) {
+      setError("No token found. Please log in.");
+      return;
     }
 
+    setMessage("");
+    setError("");
     try {
-      await API.post("subscriptions/add/", {
-        email: email_form,
-        stock_sticker: data.ticker.toUpperCase(),
-      });
+      await API.post("subscription/own/", {
+        "stock_sticker": data.ticker.toUpperCase(),
+      }, {
+        headers: {
+          Authorization: `Token ${token}`, // Knox expects "Token <token>"
+        }
+      },
+      );
       setMessage("Subscription created successfully!");
       reset();
     } catch (err) {
+      console.log(err)
       setError("Failed to create subscription. Verify that your stock sticker exists.");
     }
   };
@@ -41,7 +44,7 @@ export default function StockSubscribe({email}) {
           placeholder="Stock Ticker (e.g., ^FCHI)"
           {...register("ticker", {
             required: "Ticker is required",
-      
+
           })}
           className="border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
         />
@@ -50,20 +53,20 @@ export default function StockSubscribe({email}) {
         {/* Email Input */}
         {email === null && (
           <input
-          type="email"
-          placeholder="Email Address"
+            type="email"
+            placeholder="Email Address"
 
-          {...register("email", {
-            required: "Email is required",
-            pattern: {
-              value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
-              message: "Invalid email address",
-            },
-          })}
-          className={`border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 `}
-        />
+            {...register("email", {
+              required: "Email is required",
+              pattern: {
+                value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
+                message: "Invalid email address",
+              },
+            })}
+            className={`border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 `}
+          />
         )}
-        
+
         {errors.email && <div className="text-red-500 text-sm">{errors.email.message}</div>}
 
         {/* Feedback messages */}

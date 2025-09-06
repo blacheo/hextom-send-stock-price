@@ -7,7 +7,7 @@ from subscriptions.serializers import SubscriptionSerializer
 from rest_framework.response import Response
 
 # Create your views here.
-class SubscriptionSeeOwn(APIView):
+class SubscriptionOwn(APIView):
     permission_classes = [permissions.IsAuthenticated]
     authentication_classes = [TokenAuthentication]
 
@@ -29,28 +29,19 @@ class SubscriptionSeeOwn(APIView):
             return Response({"error": "Subscription not found"}, status=status.HTTP_404_NOT_FOUND)
         subscription.delete()
         return Response({"message": "Subscription deleted successfully"}, status=status.HTTP_204_NO_CONTENT)
-
-
-class SubscriptionListAll(APIView):
-    permission_classes = [permissions.IsAdminUser]
-    authentication_classes = [TokenAuthentication]
-    def get(self, _):
-        subscriptions = Subscription.objects.all()
-        serializer = SubscriptionSerializer(subscriptions, many=True)
-        return Response(serializer.data)
-
-class SubscriptionCreate(APIView):
-    permission_classes = [permissions.AllowAny]
-
+    
     def post(self, request):
 
-        serializer = SubscriptionSerializer(data=request.data)
+        serializer = SubscriptionSerializer(data={"stock_sticker": request.data.get("stock_sticker"), "email": request.user.email})
 
         if not serializer.is_valid():
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
         
-        if Subscription.objects.filter(email=request.data.get("email"), stock_sticker=request.data.get("stock_sticker")).exists():
+        if Subscription.objects.filter(email=request.user.email, stock_sticker=request.data.get("stock_sticker")).exists():
             return Response({"error": "Subscription already exists"}, status=status.HTTP_400_BAD_REQUEST)
         
         serializer.save()
         return Response(serializer.data, status=status.HTTP_201_CREATED)
+
+
+    

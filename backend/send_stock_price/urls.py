@@ -20,13 +20,12 @@ from django.urls import include, path
 from subscriptions.bonus_feature.views import SubscriptionNews
 from subscriptions.emails.email_views import EmailViews
 from subscriptions.users.views import LoginAPI, RegisterAPI
-from subscriptions.constants import EMAIL_NAME, GET_SUBSCRIPTION_NAME, NEWS_NAME, PUT_SUBSCRIPTION_NAME
-from subscriptions.views import SubscriptionCreate, SubscriptionListAll, SubscriptionSeeOwn
+from subscriptions.constants import EMAIL_NAME, GET_SUBSCRIPTION_NAME, NEWS_NAME
+from subscriptions.views import SubscriptionOwn
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('subscriptions/add/', SubscriptionCreate.as_view(), name=PUT_SUBSCRIPTION_NAME),
-    path('subscription/own/', SubscriptionSeeOwn.as_view(), name=GET_SUBSCRIPTION_NAME),
+    path('subscription/own/', SubscriptionOwn.as_view(), name=GET_SUBSCRIPTION_NAME),
     path('api/auth/login/', LoginAPI.as_view(), name='login'),
     path(r'api/auth/', include('knox.urls')),
     path('api/auth/register/', RegisterAPI.as_view(), name='register'),
