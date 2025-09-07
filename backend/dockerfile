@@ -19,4 +19,4 @@ ARG PORT
 
 EXPOSE $PORT
 
-CMD ["gunicorn","--bind","0.0.0.0:8080","--workers","2","send_stock_price.wsgi"]
+CMD ["gunicorn","--bind","0.0.0.0:8000","--workers","2","send_stock_price.wsgi"]

@@ -104,7 +104,7 @@ if DATABASE_URL:
         "default": dj_database_url.config(
             default=DATABASE_URL,
             conn_max_age=600,
-            ssl_require=True
+            ssl_require=False
         )
     }
 else:
@@ -113,9 +113,13 @@ else:
         "default": {
             "ENGINE": "django.db.backends.sqlite3",
             "NAME": BASE_DIR / "db.sqlite3",
+            
         }
     }
 
+CSRF_TRUSTED_ORIGINS = [
+    "https://backend-wispy-moon-5329.fly.dev",
+]
 
 # Password validation
 # https://docs.djangoproject.com/en/5.2/ref/settings/#auth-password-validators

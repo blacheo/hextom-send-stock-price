@@ -13,8 +13,7 @@ console_command = '/code/manage.py shell'
   PORT = '8000'
 
 [processes]
-  app = 'gunicorn --bind :8000 --workers 2 send_stock_price.wsgi'
-  celery = 'celery -A send_stock_price worker --loglevel=INFO'
+  app = 'gunicorn --bind :8000 --workers 1 send_stock_price.wsgi'
 
 [http_service]
   internal_port = 8000

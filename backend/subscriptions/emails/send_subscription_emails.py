@@ -1,6 +1,5 @@
 from collections import defaultdict
 from typing import Dict, List, Tuple
-from celery import shared_task
 import pytz
 from subscriptions.utilities.get_stock_price import get_stock_price
 from subscriptions.models import Subscription
