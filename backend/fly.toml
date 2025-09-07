@@ -14,6 +14,7 @@ console_command = '/code/manage.py shell'
 
 [processes]
   app = 'gunicorn --bind :8000 --workers 1 send_stock_price.wsgi'
+  cron = "supercronic /app/crontab"
 
 [http_service]
   internal_port = 8000
@@ -31,3 +32,4 @@ console_command = '/code/manage.py shell'
 [[statics]]
   guest_path = '/code/static'
   url_prefix = '/static/'
+
