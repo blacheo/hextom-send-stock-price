@@ -8,7 +8,7 @@ import { viteSingleFile } from "vite-plugin-singlefile"
 export default defineConfig({
   plugins: [react(), tailwindcss(), flowbiteReact(), viteSingleFile()],
   build: {
-    outDir: '../docs'
+    outDir: '../backend/subscriptions/templates'
   },
 })
 
