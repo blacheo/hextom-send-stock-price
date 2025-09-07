@@ -1,5 +1,6 @@
 import { useState, createContext, useEffect } from "react";
-import { LoginOverlay, SignupOverlay } from "./components/LoginOverlay";
+import { LoginOverlay } from "./components/user_authentication/LoginOverlay";
+import { SignupOverlay } from "./components/user_authentication/SignupOverlay";
 import { API } from "./utilities/constants";
 import StockSubscribe from "./components/StockSubscribe";
 import { Subscriptions } from "./components/subscriptions/Subscriptions";
@@ -16,7 +17,8 @@ export default function App() {
   const handleLogin = (email) => {
     setUserEmail(email);
     setIsLoggedIn(true);
-    setAuthMode("none")
+    setAuthMode("none");
+    localStorage.setItem("email", email)
   };
 
   const handleLogout = () => {
