@@ -27,6 +27,7 @@ export default function App() {
     setIsLoggedIn(false)
     setAuthMode("none")
     setUserEmail(null)
+    setIsAdmin(false)
 
     localStorage.removeItem("authToken")
     localStorage.removeItem("email")
@@ -79,7 +80,7 @@ export default function App() {
 
       )}
 
-      {isAdmin && (<p>logged in as admin</p>)}
+      {isAdmin && isLoggedIn && (<p>logged in as admin</p>)}
 
       {isLoggedIn && <StockSubscribe email={userEmail} setSubscriptions={setSubscriptions}/>}
 
