@@ -27,11 +27,16 @@ export default function StockSubscribe({ email, setSubscriptions }) {
       );
       setMessage("Subscription created successfully!");
       console.log(response.data)
-      setSubscriptions((prevSubscriptions) => [...prevSubscriptions, {"stock_sticker": data.ticker, "email": email, "stock_price": response.data.stock_price}])
+      if (response.status == 200) {
+        setSubscriptions((prevSubscriptions) => [...prevSubscriptions, {"stock_sticker": data.ticker, "email": email, "stock_price": response.data.stock_price}])
+      } else {
+        setError(response.message)
+      }
+      
       reset();
     } catch (err) {
-      console.log(err)
-      setError("Failed to create subscription. Verify that your stock sticker exists.");
+      console.log(err.response)
+      setError(`Failed to create subscription. ${err.response.request.response}.`);
     }
   };
 
