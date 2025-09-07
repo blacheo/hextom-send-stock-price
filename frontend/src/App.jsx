@@ -16,11 +16,7 @@ export default function App() {
   const handleLogin = (email) => {
     setUserEmail(email);
     setIsLoggedIn(true);
-  };
-
-  const handleSignup = (email) => {
-    setUserEmail(email);
-    setIsLoggedIn(true);
+    setAuthMode("none")
   };
 
   const handleLogout = () => {
@@ -45,11 +41,9 @@ export default function App() {
       const email = localStorage.getItem("email")
       handleLogin(email)
       setIsLoggedIn(true)
-    } else {
-      console.log("no token found")
-    }
+    } 
     return () => setIsLoggedIn(false)
-  }, [])
+  }, [isLoggedIn])
 
 
 
@@ -61,7 +55,7 @@ export default function App() {
         <LoginOverlay onLogin={handleLogin} onSwitchToSignup={() => setAuthMode("signup")} dismiss={() => setAuthMode("none")} setIsAdmin={setIsAdmin} />
       )}
       {!isLoggedIn && authMode === "signup" && (
-        <SignupOverlay onSignup={handleSignup} onSwitchToLogin={() => setAuthMode("login")} dismiss={() => setAuthMode("none")} />
+        <SignupOverlay onSignup={handleLogin} onSwitchToLogin={() => setAuthMode("login")} dismiss={() => setAuthMode("none")} />
       )}
 
       {/* Main content */}
@@ -80,7 +74,7 @@ export default function App() {
 
       )}
 
-      {isAdmin && isLoggedIn && (<p>logged in as admin</p>)}
+      {isAdmin && isLoggedIn && (<p className="mt-2 text-gray-700">Admin account</p>)}
 
       {isLoggedIn && <StockSubscribe email={userEmail} setSubscriptions={setSubscriptions}/>}
 

@@ -33,7 +33,6 @@ export function LoginOverlay({ onLogin, onSwitchToSignup, dismiss, setIsAdmin })
     // Notify parent of login success
     onLogin(data.email);
   } catch (error) {
-    console.error(error);
     alert(error.response.data?.error);
   }
 };

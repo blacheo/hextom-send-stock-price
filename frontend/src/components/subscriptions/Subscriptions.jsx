@@ -20,7 +20,7 @@ export function Subscriptions({isAdmin, subscriptions, setSubscriptions}) {
       },
     }).then((response) => {
       setSubscriptions(response.data)
-      console.log(response.data)
+    
     }).catch((err) => {
       console.error(err);
       setError("Failed to fetch subscriptions. Are you logged in?");
