@@ -2,7 +2,7 @@ import { useState, createContext, useEffect } from "react";
 import { LoginOverlay, SignupOverlay } from "./components/LoginOverlay";
 import { API } from "./utilities/constants";
 import StockSubscribe from "./components/StockSubscribe";
-import { Subscriptions } from "./components/Subscriptions";
+import { Subscriptions } from "./components/subscriptions/Subscriptions";
 import News from "./components/bonus_feature/News";
 
 export const SetShowLogSignUpPopupContext = createContext();

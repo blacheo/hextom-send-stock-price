@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import { API } from "../utilities/constants";
+import { API } from "../../utilities/constants";
+import SendNowButton from "./SendNowButton";
 
 export function Subscriptions({isAdmin, subscriptions, setSubscriptions}) {
   
@@ -27,23 +28,7 @@ export function Subscriptions({isAdmin, subscriptions, setSubscriptions}) {
 
   }, []);
 
-  const handleSendNow = async (subscription) => {
-    try {
-      const token = localStorage.getItem("authToken");
-      const response = await API.get(`email/?stock_sticker=${encodeURIComponent(subscription.stock_sticker)}`, {
-        headers: {
-          Authorization: `Token ${token}`, // Knox expects "Token <token>"
-        },
-        data: {
-          stock_sticker: subscription.stock_sticker
-        },
-      })
-      alert("Sending email!")
-    } catch (err) {
-      console.log(err)
-      alert("Unable to send email")
-    }
-  }
+  
 
   const handleUnsubscribe = async (subscription) => {
     try {
@@ -81,11 +66,7 @@ export function Subscriptions({isAdmin, subscriptions, setSubscriptions}) {
               {isAdmin && (<span>{sub.email}</span>)}
 
               <span className="space-x-2">
-                <button
-                onClick={() => handleSendNow(sub)}
-                className="bg-blue-500 text-white px-4 py-1 rounded-lg hover:bg-blue-600 transition"
-              >Send Now 📨</button>
-              
+              <SendNowButton subscription={sub}/>
               <button
                 onClick={() => handleUnsubscribe(sub)}
                 className="bg-red-500 text-white px-4 py-1 rounded-lg hover:bg-red-600 transition"
