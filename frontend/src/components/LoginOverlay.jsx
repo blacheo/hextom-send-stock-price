@@ -24,7 +24,7 @@ export function LoginOverlay({ onLogin, onSwitchToSignup, dismiss, setIsAdmin })
     if (response.data.token) {
       localStorage.setItem("authToken", response.data.token);
       localStorage.setItem("email", data.email)
-      localStorage.setItem("is_admin", response.data.is_admin)
+      localStorage.setItem("isAdmin", response.data.is_admin)
       console.log("email and token saved")
 
       setIsAdmin(response.data.is_admin)

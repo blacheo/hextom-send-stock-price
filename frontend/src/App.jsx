@@ -31,13 +31,13 @@ export default function App() {
 
     localStorage.removeItem("authToken")
     localStorage.removeItem("email")
-    localStorage.removeItem("is_admin")
+    localStorage.removeItem("isAdmin")
   }
 
   useEffect(() => {
     const data = localStorage.getItem("authToken");
-    const is_admin = localStorage.getItem("is_admin");
-    if (is_admin) {
+    const isAdmin = localStorage.getItem("isAdmin");
+    if (isAdmin === "true") {
       setIsAdmin(true)
     }
 
