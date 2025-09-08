@@ -14,9 +14,11 @@ class Command(BaseCommand):
         grouped_stocks: defaultdict[str, list[Dict[str, int]]] = defaultdict(list)
 
         subs = Subscription.objects.all()
+
+        cache = dict()
         
         for sub in subs:
-            grouped_stocks[sub.email].append({"stock_sticker" : sub.stock_sticker, "price" : get_stock_price(sub.stock_sticker), "decision" : stock_advice(sub.stock_sticker)})
+            grouped_stocks[sub.email].append({"stock_sticker" : sub.stock_sticker, "price" : get_stock_price(sub.stock_sticker), "decision" : stock_advice(sub.stock_sticker, cache)})
 
         send_subscription_stock_emails(grouped_stocks)
 
