@@ -1,1 +1,1 @@
-0 9-17 * * 1-5 python /code/manage.py send_subscription_stock_emails_scheduled
+0 13-21 * * 1-5 python /code/manage.py send_subscription_stock_emails_scheduled
