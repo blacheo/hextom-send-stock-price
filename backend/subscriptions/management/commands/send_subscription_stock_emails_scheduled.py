@@ -4,7 +4,7 @@ from typing import Dict
 from subscriptions.emails.chatgpt import stock_advice
 from subscriptions.emails.send_subscription_emails import send_subscription_stock_emails
 from subscriptions.models import Subscription
-from subscriptions.utilities import get_stock_price
+from subscriptions.utilities.get_stock_price import get_stock_price
 from django.core.management.base import BaseCommand
 
 class Command(BaseCommand):
