@@ -1,8 +1,6 @@
 from collections import defaultdict
 from typing import Dict, List, Tuple
 import pytz
-from subscriptions.utilities.get_stock_price import get_stock_price
-from subscriptions.models import Subscription
 from django.core.mail import EmailMultiAlternatives
 from django.template.loader import render_to_string
 from django.utils import timezone
