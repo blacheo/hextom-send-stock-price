@@ -7,6 +7,9 @@ ENV PYTHONUNBUFFERED 1
 
 WORKDIR /app
 
+RUN apt-get -y update; apt-get -y install curl
+RUN mkdir -p /code
+
 # Latest releases available at https://github.com/aptible/supercronic/releases
 ENV SUPERCRONIC_URL=https://github.com/aptible/supercronic/releases/download/v0.2.29/supercronic-linux-amd64 \
     SUPERCRONIC=supercronic-linux-amd64 \
@@ -21,8 +24,6 @@ RUN curl -fsSLO "$SUPERCRONIC_URL" \
 # You might need to change this depending on where your crontab is located
 COPY crontab crontab
 
-RUN apt-get -y update; apt-get -y install curl
-RUN mkdir -p /code
 
 WORKDIR /code
 
