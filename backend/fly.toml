@@ -29,9 +29,17 @@ console_command = '/code/manage.py shell'
   cpu_kind = 'shared'
   cpus = 1
 
+
+[[vm]]
+  memory = '256'
+  cpu_kind = 'shared'
+  cpus = 1
+  processes = ["cron"]
+
 [[statics]]
   guest_path = '/code/static'
   url_prefix = '/static/'
 
 [cron]
   auto_stop_machines = "off"  
+
