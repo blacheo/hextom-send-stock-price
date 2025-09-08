@@ -16,7 +16,7 @@ class Command(BaseCommand):
         subs = Subscription.objects.all()
         
         for sub in subs:
-            grouped_stocks[sub.email].append({"stock_sticker" : sub.stock_sticker, "price" : get_stock_price(sub), "decision" : stock_advice(sub.stock_sticker)})
+            grouped_stocks[sub.email].append({"stock_sticker" : sub.stock_sticker, "price" : get_stock_price(sub.stock_sticker), "decision" : stock_advice(sub.stock_sticker)})
 
         send_subscription_stock_emails(grouped_stocks)
 
