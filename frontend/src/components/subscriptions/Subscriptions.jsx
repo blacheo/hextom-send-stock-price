@@ -63,7 +63,7 @@ export function Subscriptions({isAdmin, subscriptions, setSubscriptions}) {
             >
               <span>{sub.stock_sticker}</span>
               <span>${sub.stock_price}</span>
-              {isAdmin && (<span>{sub.email}</span>)}
+              <span>{sub.email}</span>
 
               <span className="space-x-2">
               <SendNowButton subscription={sub}/>
