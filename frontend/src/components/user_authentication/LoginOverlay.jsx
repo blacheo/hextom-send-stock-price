@@ -48,7 +48,7 @@ export function LoginOverlay({ onLogin, onSwitchToSignup, dismiss, setIsAdmin })
         </button>
         <h2 className="text-2xl font-semibold text-center mb-6">Login</h2>
 
-        <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+        <form onSubmit={handleSubmit(onSubmit)} className="space-y-4" noValidate>
           {/* Email */}
           <div>
             <label className="block text-sm font-medium mb-1">Email</label>
