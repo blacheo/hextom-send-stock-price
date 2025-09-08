@@ -1,10 +1,10 @@
 import { useState, createContext, useEffect } from "react";
 import { LoginOverlay } from "./components/user_authentication/LoginOverlay";
 import { SignupOverlay } from "./components/user_authentication/SignupOverlay";
-import { API } from "./utilities/constants";
 import StockSubscribe from "./components/StockSubscribe";
 import { Subscriptions } from "./components/subscriptions/Subscriptions";
 import News from "./components/bonus_feature/News";
+import { Helmet } from 'react-helmet';
 
 export const SetShowLogSignUpPopupContext = createContext();
 export default function App() {
@@ -52,6 +52,11 @@ export default function App() {
 
   return (
     <div className="min-h-screen min-w-screen bg-gray-100 p-6">
+      <Helmet>
+        <title>Stock Subscribe</title>
+        <meta name="description" content="Subscribe to stocks and receive email notifications with advice." />
+        <meta name="theme-color" content="#008f68" />
+      </Helmet>
       {/* Overlays */}
       {!isLoggedIn && authMode === "login" && (
         <LoginOverlay onLogin={handleLogin} onSwitchToSignup={() => setAuthMode("signup")} dismiss={() => setAuthMode("none")} setIsAdmin={setIsAdmin} />
